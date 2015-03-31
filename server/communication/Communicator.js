@@ -33,7 +33,7 @@ var Communicator = function(io, eventEmitter) {
             }
 
             function onMessage(data) {
-                socket.broadcast.to(socket.room).emit('send message', data);
+                socket.broadcast.to(socket.room).emit('message', data);
             }
 
             function leaveRoom() {
@@ -95,7 +95,7 @@ var Communicator = function(io, eventEmitter) {
             socket.on('add user', addUser);
             socket.on('participants', sendParticipants);
             socket.on('create channel', createChannel);
-            socket.on('send message', onMessage);
+            socket.on('message', onMessage);
             socket.on('disconnect', leaveRoom);
 
             createRoom(newRoom);

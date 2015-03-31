@@ -152,7 +152,7 @@
         globalCommunicator.on('update room', updateList);
         globalCommunicator.on('channel created', addParticipant);
         globalCommunicator.on('new user', createChannel);
-        globalCommunicator.on('send message', showMessage);
+        globalCommunicator.on('message', showMessage);
 
         $(selectors.startVideo).on('click', function () {
             for (var peer in peerConnections) {
@@ -168,9 +168,10 @@
             var message = { text: text, user: User };
 
             if (e.keyCode === 13) {
-                globalCommunicator.emit('send message', message);
+                globalCommunicator.send(message);
                 showMessage(message)
             }
+            $el.val('');
         });
 
     })();

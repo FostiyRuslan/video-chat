@@ -32,6 +32,8 @@ body {
 .chat-container .messages{
     position: relative;
     height: 350px;
+    padding: 5px;
+    overflow: auto;
     border-radius: 5px;
     background-color: #fff;
 }
@@ -57,6 +59,6 @@ body {
     text-align: right;
 }
 .message .text {
-    text-align: left;
+    text-align: right;
     font-style: italic;
 }
