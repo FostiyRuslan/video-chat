@@ -1,0 +1,51 @@
+@import url(http://fonts.googleapis.com/css?family=Codystar:800,900);
+
+body {
+    min-width: 1000px;
+    min-height: 100%;
+    background: #7fbfd6 no-repeat center center fixed;
+    background-image: radial-gradient(circle at 50% 50%, #7fbfd6, #5598b0);
+    background-image: -webkit-radial-gradient(50% 50%, circle, #7fbfd6, #5598b0);
+}
+
+main {
+    position: relative;
+    width: 80%;
+    margin: auto;
+}
+
+.quick-start {
+    position: relative;
+    width: 80%;
+    top: 150px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+    height: 250px;
+    border: 1px solid #eee9e9;
+    box-shadow: 2px 2px 15px #ffffff;
+    border-radius: 6px;
+    margin: auto;
+}
+
+.quick-start h4,
+.quick-start h1 {
+    position: relative;
+    width: 80%;
+    font-weight: 100;
+    color: #fff;
+    line-height: 30px;
+    margin: auto;
+    margin-top: 20px;
+}
+.quick-start #room-id {
+    width: 95%;
+}
+
+.quick-start h1 {
+    font-family: 'Codystar', cursive;
+}
+
+.quick-start .input-wrapper {
+    margin-top: 20px;
+}
+
