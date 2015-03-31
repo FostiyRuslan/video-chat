@@ -10,7 +10,7 @@ var communicator = require('./server/communication/Communicator')(
     communicatorManager.eventEmitter
 );
 var clientLocation = path.join(__dirname, '/public');
-var dbConnection = require('./server/DbConnection');
+//var dbConnection = require('./server/DbConnection');
 var roleManager = require('./server/RolesManager');
 var router = require('./server/Router');
 var passport = require('passport');
