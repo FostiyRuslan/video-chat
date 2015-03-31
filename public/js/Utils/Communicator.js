@@ -1,8 +1,9 @@
 var Communicator = (function (io) {
     var communicator = null;
+    var production = 'https://secret-anchorage-6322.herokuapp.com/';
 
     function createCommunicator(id) {
-        var socket = io.connect('https://secret-anchorage-6322.herokuapp.com/' + id);
+        var socket = io.connect(production + id);
         return socket;
     }
 
