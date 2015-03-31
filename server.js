@@ -3,7 +3,7 @@ var http = require('http');
 var express = require('express');
 var path = require('path');
 var app = express();
-var server = app.listen(config.port);
+var server = app.listen(process.env.PORT || config.port);
 var communicatorManager = require('./server/CommunicatorManager')(server);
 var communicator = require('./server/communication/Communicator')(
     communicatorManager.io,
