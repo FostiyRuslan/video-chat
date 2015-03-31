@@ -169,9 +169,9 @@
 
             if (e.keyCode === 13) {
                 globalCommunicator.send(message);
-                showMessage(message)
+                showMessage(message);
+                $el.val('');
             }
-            $el.val('');
         });
 
     })();
