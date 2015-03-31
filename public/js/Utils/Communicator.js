@@ -3,7 +3,7 @@ var Communicator = (function (io) {
     var production = 'https://secret-anchorage-6322.herokuapp.com/';
 
     function createCommunicator(id) {
-        var socket = io.connect(production + id);
+        var socket = io.connect('http://localhost:3000/' + id);
         return socket;
     }
 

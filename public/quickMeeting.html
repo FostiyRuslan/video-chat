@@ -51,7 +51,7 @@
             };
             localPeer = new RTCPeerConnection(ice);
 
-            getUserMedia({video: true}, function (stream) {
+            getUserMedia({video: true, audio: true}, function (stream) {
                 localPeer.addStream(stream);
                 var video = $(selectors.localStream);
                 video.attr('src', window.URL.createObjectURL(stream));
