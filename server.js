@@ -10,7 +10,7 @@ var communicator = require('./server/communication/Communicator')(
     communicatorManager.eventEmitter
 );
 var clientLocation = path.join(__dirname, '/public');
-//var dbConnection = require('./server/DbConnection');
+var dbConnection = require('./server/DbConnection');
 var roleManager = require('./server/RolesManager');
 var router = require('./server/Router');
 var passport = require('passport');
@@ -28,16 +28,16 @@ app.use(passport.session());
 app.use(app.router);
 
 
-//dbConnection(function (err, dbConnection) {
-    /*if (err) {
+dbConnection(function (err, dbConnection) {
+    if (err) {
         console.error(err);
         return;
-    }*/
+    }
     roleManager = roleManager();
     app.use(roleManager.middleware());
-    //console.log('connected to db');
+    console.log('connected to db');
     router(app, communicatorManager.eventEmitter, roleManager, passport);
-//});
+});
 
 /* exports */
 module.exports = app;
