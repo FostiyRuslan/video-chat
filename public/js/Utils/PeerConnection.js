@@ -9,7 +9,9 @@ var PeerConnection = function(communicator) {
         },
         ice = {
             iceServers: [
-                {url: "stun:global.stun.twilio.com:3478?transport=udp" }
+                {url: "stun:global.stun.twilio.com:3478?transport=udp" },
+                {url: 'stun:stun.anyfirewall.com:3478' },
+                {url: 'turn:homeo@turn.bistri.com:80'}
             ]
         },
         messageHandlers = {
