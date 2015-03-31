@@ -1,6 +1,6 @@
 var PeerConnection = function(communicator) {
     var localPC, localSignalingChannel;
-    var constraints = {video: true},
+    var constraints = {video: true, audio: true},
         mediaConstraints = {
             'mandatory': {
                 'OfferToReceiveAudio':true,
