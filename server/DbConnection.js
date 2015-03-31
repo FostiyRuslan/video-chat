@@ -3,7 +3,7 @@ var simpledb = require('mongoose-simpledb');
 
 var DbConnection = function (callback) {
     var dbParams = {
-        connectionString: [config.dbHost, config.dbName].join('/'),
+        connectionString: config.dbHost,
         modelsDir: config.modelsDir,
         autoIncrementNumberIds: true
     };
