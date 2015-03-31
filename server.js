@@ -28,16 +28,16 @@ app.use(passport.session());
 app.use(app.router);
 
 
-dbConnection(function (err, dbConnection) {
-    if (err) {
+//dbConnection(function (err, dbConnection) {
+    /*if (err) {
         console.error(err);
         return;
-    }
+    }*/
     roleManager = roleManager();
     app.use(roleManager.middleware());
-    console.log('connected to db');
+    //console.log('connected to db');
     router(app, communicatorManager.eventEmitter, roleManager, passport);
-});
+//});
 
 /* exports */
 module.exports = app;
