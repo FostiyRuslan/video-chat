@@ -9,9 +9,11 @@
 <%- include('templates/header.html') %>
 <main id="wrapper">
     <div class="video-frame">
-        <video class="local-video-stream"></video>
+        <video id="local-stream" class="local-video-stream"></video>
     </div>
     <div class="participate-frame">
+        <button class="btn audio-off"><i class="glyphicon glyphicon-volume-off"></i></button>
+        <button class="btn audio-on" style="display: none;"><i class="glyphicon glyphicon-volume-up"></i></button>
         <button class="btn btn-primary left start-video">Join</button>
         <button class="btn participates-amount right" type="button">
             Participates <span class="badge">0</span>
@@ -175,6 +177,18 @@
             }
         });
 
+        $('.audio-off').on('click', function() {
+            var video = document.getElementById('local-stream');
+            video.muted = true;
+            $(this).hide();
+            $('.audio-on').show();
+        });
+        $('.audio-on').on('click', function() {
+            var video = document.getElementById('local-stream');
+            video.muted = false;
+            $(this).hide();
+            $('.audio-off').show();
+        });
     })();
 </script>
 </body>
