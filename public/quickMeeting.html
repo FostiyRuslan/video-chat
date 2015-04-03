@@ -142,10 +142,13 @@
             delete peerConnections[id];
         }
 
-        function showMessage(message) {
+        function showMessage(message, isOwner) {
             var messageEl = $('<li class="message"><div class="user"></div><div class="text"></div></li>');
             messageEl.find('.user').text(message.user.name);
             messageEl.find('.text').text(message.text);
+            if (isOwner) {
+                messageEl.addClass('own-message');
+            }
             $(selectors.messagesContainer).append(messageEl);
         }
 
@@ -172,7 +175,7 @@
 
             if (e.keyCode === 13) {
                 globalCommunicator.send(message);
-                showMessage(message);
+                showMessage(message, true);
                 $el.val('');
             }
         });
