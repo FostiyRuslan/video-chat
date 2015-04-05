@@ -1,27 +1,20 @@
-(function () {
-    var selectors = {
-        participatesAmount: '.participates-amount .badge',
-        participates: '.participates',
-        removeStreamContainer: '.video-frame',
-        localStream: '.local-video-stream',
-        startVideo: '.start-video',
-        messagesContainer: '.messages',
-        message: '#message-text'
-    };
+var Application = function (selectors) {
     var peerConnections = {};
-    var globalCommunicator = Communicator.getCommunicator('');
+    var globalCommunicator = null;
     var localPeer = null;
     var User = null;
-    var ENTER_KEY_CODE = 13;
+    var resizeWidget,
+        messageWidget,
+        controlPanelWidget;
+
+    function init() {
+        globalCommunicator = Communicator.getCommunicator('');
+        initWidgets();
+        attachEvents();
+    }
 
     function getLocalVideoStream() {
-        var ice = {
-            iceServers: [
-                {url: "stun:global.stun.twilio.com:3478?transport=tcp" },
-                {url: 'turn:turn.anyfirewall.com:443?transport=tcp'}
-            ]
-        };
-        localPeer = new RTCPeerConnection(ice);
+        localPeer = new RTCPeerConnection({ iceServers: [] });
 
         getUserMedia({video: true, audio: true}, function (stream) {
             localPeer.addStream(stream);
@@ -30,7 +23,7 @@
             video.get(0).play();
             globalCommunicator.emit('participants');
         }, function (error) {
-            console.log(error);
+            console.error(error);
         });
     }
 
@@ -42,6 +35,8 @@
             var currentPeer = peer;
 
             video.attr('id', id);
+            video.attr('width', 640);
+            video.attr('height', 480);
             video.attr("src", window.URL.createObjectURL(event.stream));
             $(selectors.removeStreamContainer).append(video);
             video.get(0).play();
@@ -58,8 +53,9 @@
         globalCommunicator.emit('add user', username);
     }
 
-    function added(id) {
-        User = id;
+    function added(user) {
+        User = user;
+        sessionStorage.setItem('user', user);
         getLocalVideoStream();
     }
 
@@ -72,10 +68,6 @@
             peerConnections[participantId] = peer;
         });
         communicator.on('remove stream', removeParticipant);
-    }
-
-    function attachParticipantEventHandler() {
-
     }
 
     function createPeers(room, user) {
@@ -111,15 +103,8 @@
         delete peerConnections[id];
     }
 
-    function showMessage(message, isCreator) {
-        var messageEl = $('<li class="message"><div class="date"></div><div class="user"></div><div class="text"></div></li>');
-        messageEl.find('.date').text(message.date);
-        messageEl.find('.user').text(message.user.name);
-        messageEl.find('.text').text(message.text);
-        if (isCreator) {
-            messageEl.addClass('own-message');
-        }
-        $(selectors.messagesContainer).append(messageEl);
+    function onMessage(message) {
+        messageWidget.emit('message', message);
     }
 
     function attachEvents() {
@@ -131,52 +116,38 @@
             }
         });
 
-        $(selectors.message).on('keypress', function(e) {
-            var $el = $(e.target);
-            var date = new Date();
-            var text = $el.val();
-            var message = {
-                text: text,
-                user: User,
-                date: [date.toDateString(), date.toTimeString().split(' ')[0]].join(' ')
-            };
-
-            if (e.keyCode === ENTER_KEY_CODE) {
-                globalCommunicator.send(message);
-                showMessage(message, true);
-                $el.val('');
-            }
+        messageWidget.on('send', function(message) {
+            globalCommunicator.send(message);
         });
 
-        $('.audio-off').on('click', function() {
-            var video = document.getElementById('local-stream');
-            video.muted = true;
-            $(this).hide();
-            $('.audio-on').show();
-        });
-
-        $('.audio-on').on('click', function() {
-            var video = document.getElementById('local-stream');
-            video.muted = false;
-            $(this).hide();
-            $('.audio-off').show();
-        });
-
-        $('.show-chat').on('click', function () {
-            $('.chat-container').toggle();
-        });
-
-        $('.chat-container').draggable();
+        globalCommunicator.on('connect', onConnect);
+        globalCommunicator.on('added', added);
+        globalCommunicator.on('participants', createPeers);
+        globalCommunicator.on('update room', updateList);
+        globalCommunicator.on('channel created', addParticipant);
+        globalCommunicator.on('new user', createChannel);
+        globalCommunicator.on('message', onMessage);
     }
 
-    globalCommunicator.on('connect', onConnect);
-    globalCommunicator.on('added', added);
-    globalCommunicator.on('participants', createPeers);
-    globalCommunicator.on('update room', updateList);
-    globalCommunicator.on('channel created', addParticipant);
-    globalCommunicator.on('new user', createChannel);
-    globalCommunicator.on('message', showMessage);
+    function initWidgets() {
+        resizeWidget = new ResizeVideoWidget({
+            selector: 'local-stream',
+            big: 'size_big',
+            middle: 'size_middle',
+            small: 'size_small'
+        });
 
-    $(document).ready(attachEvents);
+        messageWidget = new MessageWidget({
+            container: '.chat-container',
+            messagesContainer: '.messages',
+            message: '#message-text'
+        });
 
-})();
+        controlPanelWidget = new ControlPanelWidget();
+
+    }
+
+    return {
+        init: init
+    }
+};

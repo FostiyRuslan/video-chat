@@ -20,7 +20,7 @@
             if (data.password !== data.repeatPassword) return;
 
             $.post('/registration', data).done(function (resp) {
-                $('#registration').modal('show');
+                $('#registration').modal('hide');
                 $('#login').modal('show');
             }).fail(function (err) {
                 alert('error ' + err)

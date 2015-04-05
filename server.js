@@ -1,17 +1,12 @@
 var config = require('./config');
-var http = require('http');
 var express = require('express');
 var path = require('path');
 var app = express();
 var server = app.listen(process.env.PORT || config.port);
-var communicatorManager = require('./server/CommunicatorManager')(server);
-var communicator = require('./server/communication/Communicator')(
-    communicatorManager.io,
-    communicatorManager.eventEmitter
-);
+var socketConnection = require('socket.io')(server);
+var communicator = require('./server/communication/Communicator')( socketConnection );
 var clientLocation = path.join(__dirname, '/public');
 var dbConnection = require('./server/DbConnection');
-var roleManager = require('./server/RolesManager');
 var router = require('./server/Router');
 var passport = require('passport');
 
@@ -28,15 +23,15 @@ app.use(passport.session());
 app.use(app.router);
 
 
-dbConnection(function (err, dbConnection) {
+dbConnection(function (err) {
     if (err) {
         console.error(err);
         return;
     }
-    roleManager = roleManager();
+    var roleManager = require('./server/RolesManager');
     app.use(roleManager.middleware());
     console.log('connected to db');
-    router(app, communicatorManager.eventEmitter, roleManager, passport);
+    router(app);
 });
 
 /* exports */

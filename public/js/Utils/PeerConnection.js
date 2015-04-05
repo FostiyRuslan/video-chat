@@ -1,5 +1,5 @@
 var PeerConnection = function(communicator) {
-    var localPC, localSignalingChannel;
+    var pc, localSignalingChannel;
     var constraints = {video: true, audio: true},
         mediaConstraints = {
             'mandatory': {
@@ -11,6 +11,13 @@ var PeerConnection = function(communicator) {
             iceServers: [
                 {url: "stun:global.stun.twilio.com:3478?transport=tcp" },
                 {url: 'turn:turn.anyfirewall.com:443?transport=tcp'}
+            ]
+        },
+        optional = {
+            optional: [
+                {
+                    RtpDataChannels: true
+                }
             ]
         },
         messageHandlers = {
@@ -33,7 +40,7 @@ var PeerConnection = function(communicator) {
     }
 
     function setLocalAndSendMessage(sessionDescription) {
-        localPC.setLocalDescription(sessionDescription);
+        pc.setLocalDescription(sessionDescription);
         communicator.send(sessionDescription);
     }
 
@@ -54,16 +61,16 @@ var PeerConnection = function(communicator) {
             sdpMid: options.sdpMid,
             candidate: options.candidate
         });
-        localPC.addIceCandidate(candidate);
+        pc.addIceCandidate(candidate);
     }
 
     function answer(options) {
-        localPC.setRemoteDescription(new SessionDescription(options));
+        pc.setRemoteDescription(new SessionDescription(options));
     }
 
     function offer(options) {
-        localPC.setRemoteDescription(new SessionDescription(options), function () {
-            localPC.createAnswer(setLocalAndSendMessage, errorCallback, mediaConstraints);
+        pc.setRemoteDescription(new SessionDescription(options), function () {
+            pc.createAnswer(setLocalAndSendMessage, errorCallback, mediaConstraints);
         }, errorCallback);
     }
 
@@ -72,42 +79,51 @@ var PeerConnection = function(communicator) {
         handler(evt);
     }
 
+    function dataChannelConnect(event) {
+        localSignalingChannel = event.channel;
+        localSignalingChannel.onmessage = function(event){
+            pc.emit('message', event.data);
+        };
+    }
+
     function initEvents() {
         //communicator events
         communicator.on('message', onMessage.bind(this));
         //room events
-        localPC.addEventListener('icecandidate', addIceCandidate.bind(this), false);
-        localPC.addEventListener("addstream", onRemoteStreamAdded.bind(this), false);
+        pc.addEventListener('icecandidate', addIceCandidate.bind(this), false);
+        pc.addEventListener("addstream", onRemoteStreamAdded.bind(this), false);
+        pc.addEventListener("datachannel", dataChannelConnect);
     }
 
     function detachEvents() {
-        localPC.removeEventListener('icecandidate', addIceCandidate.bind(this), false);
-        localPC.removeEventListener("addstream", onRemoteStreamAdded.bind(this), false);
+        pc.removeEventListener('icecandidate', addIceCandidate.bind(this), false);
+        pc.removeEventListener("addstream", onRemoteStreamAdded.bind(this), false);
+        pc.removeEventListener("datachannel", dataChannelConnect);
     }
 
     function close() {
         detachEvents();
-        localPC.close();
+        pc.close();
         communicator.disconnect();
     }
     /*********************************************************************/
     /*public methods*/
     /********************************************************************/
     this.init = function(localStream) {
-        localPC = new RTCPeerConnection(ice);
-        localSignalingChannel = localPC.createDataChannel("sendDataChannel", {reliable: false});
+        pc = new RTCPeerConnection(ice, optional);
+        localSignalingChannel = pc.createDataChannel("sendDataChannel", {reliable: false});
         initEvents.apply(this);
-        localPC.addStream(localStream);
+        pc.addStream(localStream);
         return this;
     };
 
     this.offer = function() {
-        localPC.createOffer(setLocalAndSendMessage, errorCallback, mediaConstraints);
+        pc.createOffer(setLocalAndSendMessage, errorCallback, mediaConstraints);
         return this;
     };
 
     this.answer = function (options) {
-        localPC.createAnswer(options);
+        pc.createAnswer(options);
         return this;
     };
 

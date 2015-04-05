@@ -46,4 +46,4 @@ var RolesManager = function () {
 };
 
 
-module.exports = RolesManager;
+module.exports = RolesManager();

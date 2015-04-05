@@ -1,8 +1,10 @@
 var passport = require('passport');
+var eventEmitter = require('./communication/EventEmitter');
 
-var Router = function(app, eventEmitter, roleManager) {
+var Router = function(app) {
     var AuthController = require('./controllers/AuthController')(eventEmitter);
     var Controller = require('./controllers/Controller')(eventEmitter);
+    var roleManager = require('./RolesManager');
 
     app.get('/', AuthController.showLoginPage);
     app.post('/registration', AuthController.registration);

@@ -1,4 +1,6 @@
-var AuthController = function(eventEmitter){
+var eventEmitter = require('../communication/EventEmitter');
+
+var AuthController = function(){
     var db = require('mongoose-simpledb').db;
     var UserModel = require('../models/UserModel')(db);
 

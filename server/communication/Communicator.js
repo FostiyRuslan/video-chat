@@ -1,4 +1,6 @@
-var Communicator = function(io, eventEmitter) {
+var eventEmitter = require('./EventEmitter');
+
+var Communicator = function(io) {
     var rooms = {};
 
     function init(newRoom) {
@@ -33,6 +35,7 @@ var Communicator = function(io, eventEmitter) {
             }
 
             function onMessage(data) {
+                eventEmitter.emit('message', data);
                 socket.broadcast.to(socket.room).emit('message', data);
             }
 

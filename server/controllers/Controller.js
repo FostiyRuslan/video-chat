@@ -1,6 +1,7 @@
 var passport = require('passport');
+var eventEmitter = require('../communication/EventEmitter');
 
-var RoomController = function(eventEmitter){
+var RoomController = function(){
 
     function showRoom(req, res) {
         eventEmitter.emit('create room or join', req.params.room);
