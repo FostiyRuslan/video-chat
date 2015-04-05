@@ -9,7 +9,7 @@ var RoomController = function(eventEmitter){
 
     function quickMeeting(req, res) {
         eventEmitter.emit('create room or join', req.params.id);
-        res.render('quickMeeting.html');
+        res.render('quick.html');
     }
 
     return {

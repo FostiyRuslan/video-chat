@@ -1,6 +1,10 @@
 body {
-    background: #d7e6e1 no-repeat center center fixed;
-    background-image: radial-gradient(circle at 50% 50%, #fbfffc, #d7e6e1);
+    background: #000000 no-repeat center center fixed;
+    background-image: radial-gradient(circle at 50% 50%, #626562, #000000);
+}
+textarea {
+    color: #fff !important;
+    font-style: italic;
 }
 #wrapper {
     display: flex;
@@ -14,39 +18,78 @@ body {
 .clear {
     clear: both;
 }
+button, a {
+    color: #fff !important;
+}
 .video-frame {
+    margin-top: 50px;
     margin-right: 20px;
     display: flex;
-    flex: 1;
-    height: 400px;
+    width: 80%;
+    align-items: center;
 }
 .video-frame video{
     flex: 1 0 0;
-    height: 400px;
     margin: 10px 2px;
 }
 .participate-frame {
-    flex: 0 0 400px;
-    height: 400px;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    padding: 20px 0 20px 20px;
+    width: 350px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .3);
+    color: #fff;
+}
+.participate-frame button {
+    margin-left: 5px;
+    margin-right: 5px;
 }
 .participate-frame .chat-container {
     padding-right: 30px;
 }
-.chat-container .messages{
+.participates {
     position: relative;
     height: 300px;
+    overflow: auto;
+}
+.chat-container {
+    position: absolute;
+    right: 0;
+    bottom: 15%;
+    width: 300px;
+    height: 400px;
+    display: none;
+    border-radius: 6px;
+    background: rgba(51, 51, 51, 1);
+    color: #fff;
+    box-sizing: content-box;
+    border: 2px solid #717171;
+    box-shadow: 0 0 20px #3d6881;
+    cursor: pointer;
+    resize: both;
+}
+.chat-container .header {
+    position: relative;
+    height: 30px;
+    background-color: rgb(63, 94, 134);
+    box-shadow: 0 0 20px #3d6881;
+    padding: 2px;
+    text-align: center;
+}
+.chat-container .messages{
+    position: relative;
+    height: 270px;
     padding: 5px;
     overflow: auto;
-    border-radius: 5px;
-    background-color: #fff;
+    border-bottom: 1px solid #fff;
 }
 .participate-frame .participates {
     text-align: right;
     font-size: 15pt;
+    color: #fff;
     padding-right: 15px;
-}
-.start-video {
-    background-color: #3cb838 !important;
 }
 .message {
     list-style-type: none;
@@ -55,7 +98,11 @@ body {
     border-radius: 6px;
     margin: 1px;
     width: 100%;
-    background-color: #e1f5fe;
+    background-color: #5f7e86;
+}
+.message .date {
+    font-size: 8pt;
+    text-align: right;
 }
 .message .user {
     font-size: 12pt;
@@ -67,10 +114,21 @@ body {
     font-style: italic;
 }
 .own-message {
-    background-color: #b3e5fc;
+    background-color: #314048;
 }
-
+.add-message {
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #fff;
+}
+.start-video {
+    background-color: #3cb838 !important;
+}
 footer {
-    position: absolute;
+    position: fixed;
+    height: 10%;
+    width: 100%;
+    background-color: #000;
     bottom: 0;
+    padding-top: 10px
 }
