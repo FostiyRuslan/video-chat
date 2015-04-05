@@ -9,8 +9,7 @@ var PeerConnection = function(communicator) {
         },
         ice = {
             iceServers: [
-                {url: "stun:global.stun.twilio.com:3478?transport=tcp" },
-                {url: 'turn:turn.anyfirewall.com:443?transport=tcp'}
+                {url: "stun.l.google.com:19302" }
             ]
         },
         optional = {
