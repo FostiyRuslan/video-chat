@@ -9,8 +9,11 @@ var PeerConnection = function(communicator) {
         },
         ice = {
             iceServers: [
-                {url: "stun:global.stun.twilio.com:3478?transport=tcp" },
-                {url: 'turn:turn.anyfirewall.com:443?transport=tcp'}
+                {
+                    url: "numb.viagenie.ca",
+                    credential: 'fostiiruslan2706@gmail.com',
+                    username: '843214'
+                }
             ]
         },
         optional = {
