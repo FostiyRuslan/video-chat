@@ -9,7 +9,8 @@ var PeerConnection = function(communicator) {
         },
         ice = {
             iceServers: [
-                {'url': 'stun1.l.google.com:19302'}
+                {url: "stun:global.stun.twilio.com:3478?transport=tcp" },
+                {url: 'turn:turn.anyfirewall.com:443?transport=tcp'}
             ]
         },
         optional = {
@@ -97,7 +98,7 @@ var PeerConnection = function(communicator) {
     function detachEvents() {
         pc.removeEventListener('icecandidate', addIceCandidate.bind(this), false);
         pc.removeEventListener("addstream", onRemoteStreamAdded.bind(this), false);
-        pc.removeEventListener("datachannel", dataChannelConnect);
+        pc.addEventListener("datachannel", dataChannelConnect);
     }
 
     function close() {
