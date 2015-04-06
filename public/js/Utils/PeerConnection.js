@@ -9,11 +9,7 @@ var PeerConnection = function(communicator) {
         },
         ice = {
             iceServers: [
-                {
-                    url: "numb.viagenie.ca",
-                    credential: 'fostiiruslan2706@gmail.com',
-                    username: '843214'
-                }
+                {'url': 'stun:stun.l.google.com:19302'}
             ]
         },
         optional = {
