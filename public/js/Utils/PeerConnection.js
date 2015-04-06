@@ -9,7 +9,7 @@ var PeerConnection = function(communicator) {
         },
         ice = {
             iceServers: [
-                {'url': 'stun:stun.l.google.com:19302'}
+                {'url': 'stun1.l.google.com:19302'}
             ]
         },
         optional = {
