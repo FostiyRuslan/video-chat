@@ -1,19 +1,5 @@
 var ControlPanelWidget = function () {
-    function attachEvents() {
-        $('.audio-off').on('click', function() {
-            var video = document.getElementById('local-stream');
-            video.muted = true;
-            $(this).hide();
-            $('.audio-on').show();
-        });
-
-        $('.audio-on').on('click', function() {
-            var video = document.getElementById('local-stream');
-            video.muted = false;
-            $(this).hide();
-            $('.audio-off').show();
-        });
-
+    function attachEvents() {        
         $('.show-chat').on('click', function () {
             $('.chat-container').toggle();
         });

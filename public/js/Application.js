@@ -38,9 +38,10 @@ var Application = function (selectors) {
         localPeer = new RTCPeerConnection({ iceServers: [] });
         getUserMedia({video: true, audio: true}, function (stream) {
             localPeer.addStream(stream);
-            var video = $(selectors.localStream);
-            video.attr('src', window.URL.createObjectURL(stream));
-            video.get(0).play();
+            var video = document.querySelector(selectors.localStream);
+            video.src = window.URL.createObjectURL(stream);
+            video.muted = true;
+            video.play();
             globalCommunicator.emit('participants');
         }, onError);
     }
@@ -53,15 +54,14 @@ var Application = function (selectors) {
         var peer = new PeerConnection(communicator).init( localPeer.getLocalStreams()[0], iceServers );
 
         peer.on('got remote stream', function (event) {
-            var video = $('<video></video>');
-            var currentPeer = peer;
+            var video = document.createElement('video');
 
-            video.attr('id', id);
-            video.attr('width', 640);
-            video.attr('height', 480);
-            video.attr("src", window.URL.createObjectURL(event.stream));
+            video.id = id;
+            video.width = 640;
+            video.height = 480;
+            video.src = window.URL.createObjectURL(event.stream);
             $(selectors.removeStreamContainer).append(video);
-            video.get(0).play();
+            video.play();
         });
 
         window.addEventListener('unload', peer.stop);
