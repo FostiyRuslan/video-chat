@@ -3,6 +3,7 @@ var Application = function (selectors) {
     var globalCommunicator = null;
     var localPeer = null;
     var User = null;
+    var iceServers = null;
     var resizeWidget,
         messageWidget,
         controlPanelWidget;
@@ -13,22 +14,43 @@ var Application = function (selectors) {
         attachEvents();
     }
 
+    function getIceServers() {
+        var data = {
+            ident: "rfos",
+            secret: "678ec252-b450-4595-b4d7-511a5fdef401",
+            domain: "www.diploma-video-chat.com",
+            application: "diploma-video-chat",
+            room: "default",
+            secure: 1
+        };
+        return $.ajax({
+            type: "POST",
+            url: "https://api.xirsys.com/getIceServers",
+            data: data,
+            success: function (resp, status) {
+                var data = JSON.parse(resp);
+                iceServers = data.d.iceServers;
+            }
+        });
+    }
+
     function getLocalVideoStream() {
         localPeer = new RTCPeerConnection({ iceServers: [] });
-
         getUserMedia({video: true, audio: true}, function (stream) {
             localPeer.addStream(stream);
             var video = $(selectors.localStream);
             video.attr('src', window.URL.createObjectURL(stream));
             video.get(0).play();
             globalCommunicator.emit('participants');
-        }, function (error) {
-            console.error(error);
-        });
+        }, onError);
+    }
+
+    function onError(error) {
+        console.error(error);
     }
 
     function createConnection(communicator, id) {
-        var peer = new PeerConnection(communicator).init( localPeer.getLocalStreams()[0] );
+        var peer = new PeerConnection(communicator).init( localPeer.getLocalStreams()[0], iceServers );
 
         peer.on('got remote stream', function (event) {
             var video = $('<video></video>');
@@ -56,7 +78,9 @@ var Application = function (selectors) {
     function added(user) {
         User = user;
         sessionStorage.setItem('user', user);
-        getLocalVideoStream();
+        getIceServers()
+            .done(getLocalVideoStream)
+            .fail(onError);
     }
 
     function addParticipant(id) {

@@ -7,12 +7,6 @@ var PeerConnection = function(communicator) {
                 'OfferToReceiveVideo':true
             }
         },
-        ice = {
-            iceServers: [
-                {url: "stun:global.stun.twilio.com:3478?transport=tcp" },
-                {url: 'turn:turn.anyfirewall.com:443?transport=tcp'}
-            ]
-        },
         optional = {
             optional: [
                 {
@@ -109,8 +103,8 @@ var PeerConnection = function(communicator) {
     /*********************************************************************/
     /*public methods*/
     /********************************************************************/
-    this.init = function(localStream) {
-        pc = new RTCPeerConnection(ice, optional);
+    this.init = function(localStream, iceServers) {
+        pc = new RTCPeerConnection(iceServers, optional);
         localSignalingChannel = pc.createDataChannel("sendDataChannel", {reliable: false});
         initEvents.apply(this);
         pc.addStream(localStream);

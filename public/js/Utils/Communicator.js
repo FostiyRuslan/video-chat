@@ -1,6 +1,6 @@
 var Communicator = (function (io) {
     var communicator = null;
-    var production = 'https://diploma-video-chat.herokuapp.com/';
+    var production = 'http://diploma-video-chat.herokuapp.com/';
     var local = 'http://localhost:3000/';
 
     function createCommunicator(id) {

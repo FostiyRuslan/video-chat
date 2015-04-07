@@ -5,7 +5,7 @@ var AuthController = function(){
     var UserModel = require('../models/UserModel')(db);
 
     function authorizationFailed(req, res) {
-        res.redirect('/login');
+        res.redirect('/');
     }
 
     function showLoginPage(req, res) {
@@ -13,7 +13,7 @@ var AuthController = function(){
     }
 
     function login(req, res) {
-        res.end();
+        res.json(req.user.toJSON());
     }
 
     function registration(req, res) {

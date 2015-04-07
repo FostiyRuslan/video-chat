@@ -8,7 +8,7 @@ var RolesManager = function () {
     var UserModel = require('./models/UserModel')(db);
     var roleManager = new ConnectRoles({
         failureHandler: function (req, res) {
-            res.redirect(401, '/login');
+            res.redirect(401, '/');
         }
     });
 

@@ -9,7 +9,7 @@ var Router = function(app) {
     app.get('/', AuthController.showLoginPage);
     app.post('/registration', AuthController.registration);
     app.post('/login',
-        passport.authenticate('local', { failureRedirect: '/login' }),
+        passport.authenticate('local', { failureRedirect: '/' }),
         AuthController.login
     );
     app.get('/logout', function(req, res){

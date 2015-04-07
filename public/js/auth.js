@@ -23,9 +23,7 @@
                 $('#registration').modal('hide');
                 $('#login').modal('show');
             }).fail(function (err) {
-                alert('error ' + err)
-            }).always(function () {
-                
+                alert('error ' + err.statusText);
             });
         });
         $('#login .login-submit').on('click', function () {
@@ -35,11 +33,9 @@
             };
 
             $.post('/login', data).done(function (resp) {
-                location.replace('/room');
+                location.replace('/room/' + resp.roomId);
             }).fail(function (err) {
-                alert(err);
-            }).always(function () {
-                
+                alert('error' + err.statusText);
             });
         });
     });
