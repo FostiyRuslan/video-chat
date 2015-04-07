@@ -29,7 +29,7 @@ var Application = function (selectors) {
             data: data,
             success: function (resp, status) {
                 var data = JSON.parse(resp);
-                iceServers = data.d.iceServers;
+                iceServers = data.d;
             }
         });
     }
