@@ -1,5 +1,5 @@
 var ControlPanelWidget = function () {
-    function attachEvents() {        
+    function attachEvents() {
         $('.show-chat').on('click', function () {
             $('.chat-container').toggle();
         });
