@@ -9,16 +9,16 @@
     "connect-roles": "~3.1.1",
     "ejs": "~2.2.3",
     "express": "~3.19.1",
-    "express-winston": "^0.2.12",
+    "express-winston": "~0.2.12",
     "mongoose": "~3.8.18",
     "mongoose-auto-increment": "~3.2.4",
     "mongoose-simpledb": "~4.0.3",
     "node-static": "~0.7.6",
-    "nodemailer": "^1.3.2",
+    "nodemailer": "~1.3.2",
     "passport": "~0.2.1",
     "passport-local": "~1.0.0",
     "socket.io": "~1.3.2",
-    "winston": "^1.0.0"
+    "winston": "~1.0.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
