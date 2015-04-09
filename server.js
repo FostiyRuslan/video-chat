@@ -2,6 +2,7 @@ var config = require('./config');
 var express = require('express');
 var path = require('path');
 var app = express();
+var logger = require('./Logger')();
 var server = app.listen(process.env.PORT || config.port);
 var socketConnection = require('socket.io')(server);
 var communicator = require('./server/communication/Communicator')( socketConnection );
@@ -21,7 +22,7 @@ app.use(express.session({ secret: 'keyboard cat' }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);
-
+app.use(logger);
 
 dbConnection(function (err) {
     if (err) {

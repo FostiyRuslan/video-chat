@@ -6,6 +6,7 @@ var Application = function (selectors) {
     var iceServers = null;
     var resizeWidget,
         messageWidget,
+        sendMailWidget,
         controlPanelWidget;
 
     function init() {
@@ -164,7 +165,14 @@ var Application = function (selectors) {
         messageWidget = new MessageWidget({
             container: '.chat-container',
             messagesContainer: '.messages',
-            message: '#message-text'
+            message: '#message-text',
+            showMessageIcon: '.show-chat'
+        });
+
+        sendMailWidget = new SendMailWidget({
+            container: '#send-offer',
+            form: '#data-mail-form',
+            sendButton: '#send-mail-button'
         });
 
         controlPanelWidget = new ControlPanelWidget();

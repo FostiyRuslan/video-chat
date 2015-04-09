@@ -35,7 +35,6 @@ var Communicator = function(io) {
             }
 
             function onMessage(data) {
-                eventEmitter.emit('message', data);
                 socket.broadcast.to(socket.room).emit('message', data);
             }
 

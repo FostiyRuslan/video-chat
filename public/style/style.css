@@ -3,10 +3,6 @@ body {
     background-image: radial-gradient(circle at 50% 50%, #626562, #000000);
     min-width: 980px;
 }
-textarea {
-    color: #fff !important;
-    font-style: italic;
-}
 #wrapper {
     display: flex;
 }
@@ -21,6 +17,9 @@ textarea {
 }
 button, a {
     color: #fff !important;
+}
+.highlight {
+    box-shadow: 0 0 20px #ef3019;
 }
 .video-frame {
     margin-top: -80px;
@@ -83,6 +82,10 @@ button, a {
     overflow: auto;
     border-bottom: 1px solid #fff;
 }
+.chat-container textarea {
+    color: #fff !important;
+    font-style: italic;
+}
 .participate-frame .participates {
     text-align: right;
     font-size: 15pt;
@@ -129,4 +132,9 @@ footer {
     background-color: #000;
     bottom: 0;
     padding-top: 10px
+}
+.bootbox .bootbox-body {
+    text-align: center;
+    padding-top: 20px;
+    font-size: 12pt;
 }

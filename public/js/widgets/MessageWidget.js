@@ -1,9 +1,16 @@
 var MessageWidget = function (selectors) {
     var ENTER_KEY_CODE = 13;
     var self = this;
+    var isShown = false;
 
     function attachEvents() {
         $(selectors.message, selectors.container).on('keypress', sendMessage);
+        $(selectors.showMessageIcon).on('click', function () {
+            $('.chat-container').toggle();
+            $('.show-chat').removeClass('highlight');
+            isShown = !isShown;
+        });
+
         self.on('message', showMessage);
     }
 
@@ -31,13 +38,14 @@ var MessageWidget = function (selectors) {
         messageEl.find('.text').text(message.text);
         if (isCreator) {
             messageEl.addClass('own-message');
+        } else if (!isCreator && !isShown){
+            $(selectors.showMessageIcon).addClass('highlight');
         }
         $(selectors.messagesContainer, selectors.container).append(messageEl);
     }
 
     function init() {
         attachEvents();
-
         $('.chat-container').draggable();
     }
 

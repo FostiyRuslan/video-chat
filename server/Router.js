@@ -25,6 +25,11 @@ var Router = function(app) {
         roleManager.can('authenticated'),
         Controller.showRoom
     );
+
+    app.post('/sendOffer',
+        roleManager.can('authenticated'),
+        Controller.sendOffer
+    );
 };
 
 module.exports = Router;
