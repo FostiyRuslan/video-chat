@@ -101,6 +101,7 @@ var Application = function (selectors) {
 
     function added(user) {
         User = user;
+        sessionStorage.setItem('user', user);
         getIceServers()
             .done(createLocalPeer)
             .fail(onError);
