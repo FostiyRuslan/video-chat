@@ -152,7 +152,7 @@ var Application = function (selectors) {
 
     function onMessage(message) {
         if (message.type === 'message') {
-            messageWidget.emit('message', message);
+            messageWidget.emit('message', message.message);
         } else if (message.type === 'action'){
             switch(message.action) {
                 case 'toggleVideoStream': {
