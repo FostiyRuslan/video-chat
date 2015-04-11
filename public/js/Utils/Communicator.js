@@ -4,7 +4,7 @@ var Communicator = (function (io) {
     var local = 'http://localhost:3000/';
 
     function createCommunicator(id) {
-        var socket = io.connect(local + id);
+        var socket = io.connect(production + id);
         return socket;
     }
 
