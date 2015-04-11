@@ -1,13 +1,50 @@
 <footer>
-    <img src="../static/images/webrtc-logo.png" alt="logo" width="40">
-    <button class="btn right show-chat"><i class="glyphicon glyphicon-pencil"></i></button>
-    <button data-toggle="modal" data-target="#send-offer" class="btn right show-send-offer">
-        <i class="glyphicon glyphicon-envelope"></i>
-    </button>
-    <button id="copy-link" class="btn right" data-clipboard-text="">
-        <i class="glyphicon glyphicon glyphicon-floppy-save"></i>
-    </button>
-    <button id="size_big" class="btn right"><i class="glyphicon glyphicon-fullscreen" title="600x410"></i></button>
-    <button id="size_middle" class="btn right"><i class="glyphicon glyphicon-resize-full" title="320x220"></i></button>
-    <button id="size_small" class="btn right"><i class="glyphicon glyphicon-resize-small" title="150x150"></i></button>
+    <div class="navbar navbar-white control-bar">
+        <a href="/"><img src="../static/images/webrtc-logo.png" alt="logo" width="40"></a>
+        <button data-toggle="tooltip" data-placement="top" title="" data-original-title="Show Chat"
+                class="btn right show-chat">
+            <i class="mdi-communication-message"></i>
+        </button>
+        <button data-toggle="tooltip" data-placement="top" title="" data-original-title="Send file"
+                data-toggle="modal" class="btn right send-file">
+            <i class="mdi-file-attachment"></i>
+        </button>
+        <button data-toggle="modal" data-target="#send-offer" class="btn right show-send-offer">
+            <i class="mdi-communication-email"></i>
+        </button>
+        <button data-toggle="tooltip" data-placement="top" title="" data-original-title="Save"
+                id="copy-link" class="btn right" data-clipboard-text="">
+            <i class="mdi-content-archive"></i>
+        </button>
+        <button style="display: none;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Voice on"
+                id="voice-on" class="btn right">
+            <i class="mdi-av-mic"></i>
+        </button>
+        <button data-toggle="tooltip" data-placement="top" title="" data-original-title="Voice off"
+                id="voice-off" class="btn right">
+            <i class="mdi-av-mic-off"></i>
+        </button>
+        <button style="display: none;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Video on"
+                id="video-on" class="btn right">
+            <i class="mdi-av-play-arrow"></i>
+        </button>
+        <button data-toggle="tooltip" data-placement="top" title="" data-original-title="Video off"
+                id="video-off" class="btn right">
+            <i class="mdi-av-pause-circle-fill"></i>
+        </button>
+        <div class="btn-group-vertical" id="resolutions" style="display: none;">
+            <button id="size_big" class="btn btn-danger resolution" data-width="600" data-height="410">
+                <i class="mdi-hardware-laptop" title="640x480"></i>
+            </button><br>
+            <button  id="size_middle" class="btn btn-warning resolution" data-width="320" data-height="220">
+                <i class="mdi-hardware-tablet" title="320x240"></i>
+            </button><br>
+            <button id="size_small" class="btn btn-info resolution" data-width="150" data-height="150">
+                <i class="mdi-hardware-smartphone" title="150x150"></i>
+            </button>
+        </div>
+        <button type="button" class="btn btn-default right" data-container="body" data-toggle="popover" data-placement="top">
+            <i class="mdi-action-open-with"></i>
+        </button>
+    </div>
 </footer>

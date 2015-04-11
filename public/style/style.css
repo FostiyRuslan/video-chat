@@ -1,8 +1,3 @@
-body {
-    background: #000000 no-repeat center center fixed;
-    background-image: radial-gradient(circle at 50% 50%, #626562, #000000);
-    min-width: 980px;
-}
 #wrapper {
     display: flex;
 }
@@ -15,9 +10,6 @@ body {
 .clear {
     clear: both;
 }
-button, a {
-    color: #fff !important;
-}
 .highlight {
     box-shadow: 0 0 20px #ef3019;
 }
@@ -26,18 +18,20 @@ button, a {
     display: flex;
     flex: 1 1 0;
     align-items: center;
+    flex-wrap: wrap;
+    background: #ffffff no-repeat center center fixed;
+    background-image: radial-gradient(circle at 50% 50%, #cdd1cd, #fff);
 }
 .video-frame video{
-    flex: 1 0 0;
+    flex: 1 0 30%;
     margin: 2px;
 }
 .participate-frame {
     flex: 0 0 250px;
-    padding: 20px 0 20px 20px;
     height: 100vh;
     padding-right: 20px;
     background-color: rgba(0, 0, 0, .3);
-    color: #fff;
+    resize: vertical;
 }
 .participate-frame button {
     margin-left: 5px;
@@ -58,20 +52,11 @@ button, a {
     width: 300px;
     height: 400px;
     display: none;
-    border-radius: 6px;
-    background: rgba(51, 51, 51, 1);
-    color: #fff;
-    box-sizing: content-box;
-    border: 2px solid #717171;
-    box-shadow: 0 0 20px #3d6881;
-    cursor: pointer;
-    resize: both;
+    cursor: pointer
 }
 .chat-container .header {
     position: relative;
     height: 30px;
-    background-color: rgb(63, 94, 134);
-    box-shadow: 0 0 20px #3d6881;
     padding: 2px;
     text-align: center;
 }
@@ -80,26 +65,20 @@ button, a {
     height: 270px;
     padding: 5px;
     overflow: auto;
-    border-bottom: 1px solid #fff;
+    border-bottom: 2px solid #4f81e8;
 }
 .chat-container textarea {
-    color: #fff !important;
     font-style: italic;
 }
 .participate-frame .participates {
     text-align: right;
     font-size: 15pt;
-    color: #fff;
     padding-right: 15px;
 }
 .message {
     list-style-type: none;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
     margin: 1px;
-    width: 100%;
-    background-color: #5f7e86;
+    width: 80%;
 }
 .message .date {
     font-size: 8pt;
@@ -120,21 +99,31 @@ button, a {
 .add-message {
     padding-left: 5px;
     padding-right: 5px;
-    color: #fff;
-}
-.start-video {
-    background-color: #3cb838 !important;
+    color: #4f81e8;
 }
 footer {
     position: fixed;
-    height: 10%;
     width: 100%;
-    background-color: #000;
     bottom: 0;
-    padding-top: 10px
+}
+footer .control-bar {
+    padding: 8px !important;
+    margin: 0;
+}
+footer .btn {
+    margin: 0;
 }
 .bootbox .bootbox-body {
     text-align: center;
     padding-top: 20px;
     font-size: 12pt;
+}
+body > .alert {
+    position: absolute;
+    width: 50%;
+    left: 50%;
+    display: none;
+    margin-left: -25%;
+    z-index: 100;
+    text-align: center;
 }

@@ -20,10 +20,12 @@
             if (data.password !== data.repeatPassword) return;
 
             $.post('/registration', data).done(function (resp) {
-                $('#registration').modal('hide');
+                AlertWidget.show('success', 'You have been successfully registered!');
                 $('#login').modal('show');
             }).fail(function (err) {
-                alert('error ' + err.statusText);
+                AlertWidget.show('error', err.statusText);
+            }).always(function () {
+                $('#registration').modal('hide');
             });
         });
         $('#login .login-submit').on('click', function () {
@@ -32,10 +34,13 @@
                 'password': $('#login #user-password').val()
             };
 
-            $.post('/login', data).done(function (resp) {
-                location.replace('/room/' + resp.roomId);
+            $.post('/login', data).done(function (user) {
+                sessionStorage.setItem('user', user);
+                location.replace('/room/' + user.roomId);
             }).fail(function (err) {
-                alert('error' + err.statusText);
+                AlertWidget.show('error', err.statusText);
+            }).always(function () {
+                $('#login').modal('hide');
             });
         });
     });

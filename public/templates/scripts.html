@@ -5,16 +5,18 @@
 <script type="text/javascript" src="/js/lib/bower_components/bootstrap-material-design/dist/js/ripples.js"></script>
 <script type="text/javascript" src="/js/lib/bower_components/zeroclipboard/dist/ZeroClipboard.Core.js"></script>
 <script type="text/javascript" src="/js/lib/bower_components/zeroclipboard/dist/ZeroClipboard.js"></script>
+<script type="text/javascript" src="/js/lib/bower_components/moment/moment.js"></script>
 <script type="text/javascript" src="/js/lib/EventEmitter.js"></script>
 <script type="text/javascript" src="/js/lib/bootbox.min.js"></script>
+<script type="text/javascript" src="/js/lib/bootstrap-material-datepicker/js/bootstrap-material-datepicker.js"></script>
 <script type="text/javascript" src='/js/Utils/Adapter.js'></script>
-<script type="text/javascript" src='https://diploma-video-chat.herokuapp.com/socket.io/socket.io.js'></script>
+<script type="text/javascript" src='/socket.io/socket.io.js'></script>
 <script type="text/javascript" src="/js/Utils/Communicator.js"></script>
 <script type="text/javascript" src="/js/Utils/PeerConnection.js"></script>
-<script type="text/javascript" src="/js/widgets/video-resize.js"></script>
 <script type="text/javascript" src="/js/widgets/MessageWidget.js"></script>
 <script type="text/javascript" src="/js/widgets/SendMailWidget.js"></script>
 <script type="text/javascript" src="/js/widgets/ControlPanelWidget.js"></script>
+<script type="text/javascript" src="/js/widgets/AlertWidget.js"></script>
 <script type="text/javascript" src="/js/Application.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -23,8 +25,12 @@
             participates: '.participates',
             removeStreamContainer: '.video-frame',
             localStream: '#local-stream',
-            startVideo: '.start-video',
-            messagesContainer: '.messages'
+            join: '.join',
+            videoOn: '#video-on',
+            videoOff: '#video-off',
+            voiceOn: '#voice-on',
+            voiceOff: '#voice-off',
+            resolution: '.resolution'
         }).init();
     });
 </script>

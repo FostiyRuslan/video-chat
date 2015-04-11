@@ -2,6 +2,14 @@ var SendMailWidget = function (selectors) {
 
     function init() {
         attachEvents();
+        initWidgets();
+    }
+
+    function initWidgets() {
+        $('[type=datetime]', selectors.container).bootstrapMaterialDatePicker({
+            format: 'dddd DD MMMM YYYY - HH:mm',
+            weekStart: 1
+        });
     }
 
     function attachEvents() {
@@ -25,18 +33,17 @@ var SendMailWidget = function (selectors) {
         if (data.to && data.subject && data.text) {
             $.post('/sendOffer', data, onSuccess, onError);
         } else {
-            bootbox.alert("Some field is empty!", function () {
-                $(selectors.container).modal('show');
-            });
+            AlertWidget.show('error', "Some field is empty!");
+            $(selectors.container).modal('show');
         }
     }
 
     function onSuccess(resp) {
-        bootbox.alert("Offer has been sent");
+        AlertWidget.show('success', "Offer has been sent");
     }
 
     function onError(resp) {
-        bootbox.alert("Sending error!");
+        AlertWidget.show('error', "Sending error!");
     }
 
     init();

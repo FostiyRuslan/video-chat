@@ -19,6 +19,7 @@
     "bootstrap": "~3.3.4",
     "bootstrap-material-design": "~0.3.0",
     "jquery-ui": "~1.11.4",
-    "zeroclipboard": "~2.2.0"
+    "zeroclipboard": "~2.2.0",
+    "moment": "~2.10.2"
   }
 }

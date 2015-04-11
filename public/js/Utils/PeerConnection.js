@@ -1,5 +1,5 @@
 var PeerConnection = function(communicator) {
-    var pc, localSignalingChannel;
+    var pc, localSignalingChannel, stream;
     var constraints = {video: true, audio: true},
         mediaConstraints = {
             'mandatory': {
@@ -18,6 +18,7 @@ var PeerConnection = function(communicator) {
             offer: offer.bind(this),
             candidate: createIceCandidate.bind(this),
             answer: answer.bind(this),
+            resolutionChanged: resolutionChanged.bind(this),
             bye: close.bind(this)
         };
 
@@ -68,6 +69,10 @@ var PeerConnection = function(communicator) {
         }, errorCallback);
     }
 
+    function resolutionChanged() {
+        this.emit('resolutionChanged');
+    }
+
     function onMessage(evt) {
         var handler = messageHandlers[evt.type];
         handler(evt);
@@ -78,6 +83,10 @@ var PeerConnection = function(communicator) {
         localSignalingChannel.onmessage = function(event){
             pc.emit('message', event.data);
         };
+    }
+
+    function onNegotiationNeeded() {
+        return arguments;
     }
 
     function initEvents() {
@@ -92,7 +101,7 @@ var PeerConnection = function(communicator) {
     function detachEvents() {
         pc.removeEventListener('icecandidate', addIceCandidate.bind(this), false);
         pc.removeEventListener("addstream", onRemoteStreamAdded.bind(this), false);
-        pc.addEventListener("datachannel", dataChannelConnect);
+        pc.removeEventListener("datachannel", dataChannelConnect);
     }
 
     function close() {
@@ -107,7 +116,21 @@ var PeerConnection = function(communicator) {
         pc = new RTCPeerConnection(iceServers, optional);
         localSignalingChannel = pc.createDataChannel("sendDataChannel", {reliable: false});
         initEvents.apply(this);
+        stream = localStream;
         pc.addStream(localStream);
+        return this;
+    };
+
+    this.updateStream = function (localStream) {
+        pc.getLocalStreams().forEach(function (stream) {
+            pc.removeStream(stream);
+        });
+        pc.addStream(localStream);
+        stream = localStream;
+        communicator.send({
+            type: 'resolutionChanged'
+        });
+        this.offer();
         return this;
     };
 

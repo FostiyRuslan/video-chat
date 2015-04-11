@@ -4,6 +4,7 @@ var Application = function (selectors) {
     var localPeer = null;
     var User = null;
     var iceServers = null;
+    var localStream = null;
     var resizeWidget,
         messageWidget,
         sendMailWidget,
@@ -35,16 +36,27 @@ var Application = function (selectors) {
         });
     }
 
-    function getLocalVideoStream() {
-        localPeer = new RTCPeerConnection({ iceServers: [] });
-        getUserMedia({video: true, audio: true}, function (stream) {
+    function getLocalVideoStream(options) {
+        var constraints = options.constraints || {video: true, audio: true};
+        getUserMedia(constraints, function (stream) {
+            localStream = stream;
             localPeer.addStream(stream);
             var video = document.querySelector(selectors.localStream);
             video.src = window.URL.createObjectURL(stream);
             video.muted = true;
             video.play();
-            globalCommunicator.emit('participants');
+            updatePeersLocalStream(stream);
+            options.onSuccess && options.onSuccess();
         }, onError);
+    }
+
+    function createLocalPeer() {
+        localPeer = new RTCPeerConnection({ iceServers: [] });
+        getLocalVideoStream({
+            onSuccess: function () {
+                globalCommunicator.emit('participants');
+            }
+        });
     }
 
     function onError(error) {
@@ -64,6 +76,9 @@ var Application = function (selectors) {
             $(selectors.removeStreamContainer).append(video);
             video.play();
         });
+        peer.on('resolutionChanged', function () {
+            $('#' + id).remove();
+        });
 
         window.addEventListener('unload', peer.stop);
 
@@ -71,24 +86,31 @@ var Application = function (selectors) {
     }
 
     function onConnect() {
-        var username = new Date().valueOf().toString();
+        bootbox.prompt("What is your name?", function(name) {
+            if (name === null) {
+                globalCommunicator.emit('add user', 'Anonymous');
+                return;
+            }
+            globalCommunicator.emit('add user', name);
+        });
+    }
 
-        globalCommunicator.emit('add user', username);
+    function toggleVideo(id) {
+        $('#' + id).toggle();
     }
 
     function added(user) {
         User = user;
-        sessionStorage.setItem('user', user);
         getIceServers()
-            .done(getLocalVideoStream)
+            .done(createLocalPeer)
             .fail(onError);
     }
 
     function addParticipant(id) {
         var communicator = Communicator.getCommunicator(id);
+        var participantId = id.split('==')[1];
 
         communicator.on('connect', function () {
-            var participantId = id.split('==')[1];
             var peer = createConnection(communicator, participantId);
             peerConnections[participantId] = peer;
         });
@@ -129,20 +151,110 @@ var Application = function (selectors) {
     }
 
     function onMessage(message) {
-        messageWidget.emit('message', message);
+        if (message.type === 'message') {
+            messageWidget.emit('message', message);
+        } else if (message.type === 'action'){
+            switch(message.action) {
+                case 'toggleVideoStream': {
+                    toggleVideo(message.sender);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
+
+    function switchVoice(status) {
+        var audioTracks = localStream.getAudioTracks();
+
+        if (audioTracks[0]) {
+            audioTracks[0].enabled = status;
+        }
+        $(selectors.voiceOff).toggle();
+        $(selectors.voiceOn).toggle();
+    }
+
+    function switchVideo(status) {
+        var videoTracks = localStream.getVideoTracks();
+
+        if (videoTracks[0]) {
+            videoTracks[0].enabled = status;
+        }
+        $(selectors.videoOff).toggle();
+        $(selectors.videoOn).toggle();
+        globalCommunicator.send({
+            type: 'action',
+            action: 'toggleVideoStream'
+        });
+    }
+
+    function voiceOn() {
+        switchVoice(true);
+    }
+
+    function voiceOff() {
+        switchVoice(false);
+    }
+
+    function videoOn() {
+        $(selectors.localStream).show();
+        switchVideo(true);
+    }
+
+    function videoOff() {
+        $(selectors.localStream).hide();
+        switchVideo(false);
+    }
+
+    function join() {
+        for (var peer in peerConnections) {
+            if (peerConnections.hasOwnProperty(peer)) {
+                peerConnections[peer].offer();
+            }
+        }
+    }
+
+    function changeResolution() {
+        var constraints = {
+            audio: true,
+            video: {
+                mandatory: {
+                    maxWidth: +($(this).data('width')),
+                    maxHeight: +($(this).data('height'))
+                }
+            }
+        };
+        localPeer.getLocalStreams().forEach(function (stream) {
+            stream.stop();
+            localPeer.removeStream(stream);
+        });
+        getLocalVideoStream({
+            constraints: constraints
+        });
+    }
+
+    function updatePeersLocalStream(stream) {
+        for (var peer in peerConnections) {
+            if (peerConnections.hasOwnProperty(peer)) {
+                peerConnections[peer].updateStream(stream);
+            }
+        }
     }
 
     function attachEvents() {
-        $(selectors.startVideo).on('click', function () {
-            for (var peer in peerConnections) {
-                if (peerConnections.hasOwnProperty(peer)) {
-                    peerConnections[peer].offer();
-                }
-            }
-        });
+        $(selectors.join).on('click', join);
+        $(selectors.voiceOn).on('click', voiceOn);
+        $(selectors.voiceOff).on('click', voiceOff);
+        $(selectors.videoOn).on('click', videoOn);
+        $(selectors.videoOff).on('click', videoOff);
+        $('body').on('click', selectors.resolution, changeResolution);
 
         messageWidget.on('send', function(message) {
-            globalCommunicator.send(message);
+            globalCommunicator.send({
+                type: 'message',
+                message: message
+            });
         });
 
         globalCommunicator.on('connect', onConnect);
@@ -155,12 +267,6 @@ var Application = function (selectors) {
     }
 
     function initWidgets() {
-        resizeWidget = new ResizeVideoWidget({
-            selector: 'local-stream',
-            big: 'size_big',
-            middle: 'size_middle',
-            small: 'size_small'
-        });
 
         messageWidget = new MessageWidget({
             container: '.chat-container',

@@ -7,7 +7,7 @@ var MessageWidget = function (selectors) {
         $(selectors.message, selectors.container).on('keypress', sendMessage);
         $(selectors.showMessageIcon).on('click', function () {
             $('.chat-container').toggle();
-            $('.show-chat').removeClass('highlight');
+            $('.show-chat').removeClass('btn-danger');
             isShown = !isShown;
         });
 
@@ -32,16 +32,24 @@ var MessageWidget = function (selectors) {
     }
 
     function showMessage(message, isCreator) {
-        var messageEl = $('<li class="message"><div class="date"></div><div class="user"></div><div class="text"></div></li>');
+        var $messageContainer = $(selectors.messagesContainer, selectors.container);
+        var messageEl = $('<li class="alert message"><div class="date"></div><div class="user"></div><div class="text"></div></li>');
         messageEl.find('.date').text(message.date);
         messageEl.find('.user').text(message.user.name);
         messageEl.find('.text').text(message.text);
-        if (isCreator) {
-            messageEl.addClass('own-message');
-        } else if (!isCreator && !isShown){
-            $(selectors.showMessageIcon).addClass('highlight');
+        isCreator ?
+            messageEl.addClass('alert-success') :
+            messageEl.addClass('alert-danger');
+
+        if ($messageContainer.find('li:last').hasClass('alert-danger')) {
+            messageEl.addClass('left');
+        } else {
+            messageEl.addClass('right');
         }
-        $(selectors.messagesContainer, selectors.container).append(messageEl);
+        if (!isCreator && !isShown){
+            $(selectors.showMessageIcon).addClass('btn-danger');
+        }
+        $messageContainer.append(messageEl);
     }
 
     function init() {

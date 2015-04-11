@@ -35,6 +35,7 @@ var Communicator = function(io) {
             }
 
             function onMessage(data) {
+                data.sender = socket.id;
                 socket.broadcast.to(socket.room).emit('message', data);
             }
 
@@ -73,7 +74,6 @@ var Communicator = function(io) {
 
                     function onMessage(data) {
                         var id = connection.nsp.name.slice(1).split('==').reverse().join('==');
-
                         io.of('/' + id).emit('message', data);
                     }
 
@@ -85,6 +85,7 @@ var Communicator = function(io) {
                     }
 
                     connection.removeAllListeners();
+                    connection.on('message', onMessage);
                     connection.on('message', onMessage);
                     connection.on('disconnect', removeStream);
                 });

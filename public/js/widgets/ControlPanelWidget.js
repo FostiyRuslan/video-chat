@@ -6,6 +6,13 @@ var ControlPanelWidget = function () {
 
     function init() {
         initZeroClipboard();
+        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="popover"]').popover({
+            html: true,
+            content: function() {
+                return $('#resolutions').html();
+            }
+        });
     }
 
     init();
