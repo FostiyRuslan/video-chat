@@ -27,11 +27,18 @@
     margin: 2px;
 }
 .participate-frame {
-    flex: 0 0 250px;
+    flex: 0 0 270px;
     height: 100vh;
     padding-right: 20px;
     background-color: rgba(0, 0, 0, .3);
-    resize: vertical;
+    transition: max-width  .8s;
+}
+
+.participate-frame .collapse-button {
+    transform: rotate(90deg);
+    margin-left: -45px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 .participate-frame button {
     margin-left: 5px;
@@ -62,7 +69,7 @@
 }
 .chat-container .messages{
     position: relative;
-    height: 270px;
+    height: 230px;
     padding: 5px;
     overflow: auto;
     border-bottom: 2px solid #4f81e8;
@@ -126,4 +133,32 @@ body > .alert {
     margin-left: -25%;
     z-index: 100;
     text-align: center;
+}
+.collapse {
+    height: auto;
+    width: auto;
+}
+.collapse.height {
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    -webkit-transition: height 0.35s ease;
+    -moz-transition: height 0.35s ease;
+    -o-transition: height 0.35s ease;
+    transition: height 0.35s ease;
+}
+.collapse.width {
+    position: relative;
+    width: 0;
+    overflow: hidden;
+    -webkit-transition: width 0.35s ease;
+    -moz-transition: width 0.35s ease;
+    -o-transition: width 0.35s ease;
+    transition: width 0.35s ease;
+}
+.collapse.in.width {
+    width: auto;
+}
+.collapse.in.height {
+    height: auto;
 }

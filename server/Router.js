@@ -7,11 +7,10 @@ var Router = function(app) {
     var roleManager = require('./RolesManager');
 
     app.get('/', AuthController.showLoginPage);
+
     app.post('/registration', AuthController.registration);
-    app.post('/login',
-        passport.authenticate('local', { failureRedirect: '/' }),
-        AuthController.login
-    );
+
+    app.post('/login', AuthController.login);
     app.get('/logout', function(req, res){
         req.logout();
         res.redirect('/');

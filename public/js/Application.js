@@ -60,7 +60,7 @@ var Application = function (selectors) {
     }
 
     function onError(error) {
-        console.error(error);
+        AlertWidget.show('error', error.name);
     }
 
     function createConnection(communicator, id) {
@@ -80,6 +80,10 @@ var Application = function (selectors) {
             $('#' + id).remove();
         });
 
+        peer.on('progress', function (progress) {
+            messageWidget.emit('progress', progress);
+        });
+
         window.addEventListener('unload', peer.stop);
 
         return peer;
@@ -87,7 +91,7 @@ var Application = function (selectors) {
 
     function onConnect() {
         bootbox.prompt("What is your name?", function(name) {
-            if (name === null) {
+            if (!name) {
                 globalCommunicator.emit('add user', 'Anonymous');
                 return;
             }
@@ -101,7 +105,7 @@ var Application = function (selectors) {
 
     function added(user) {
         User = user;
-        sessionStorage.setItem('user', user);
+        sessionStorage.setItem('user', User);
         getIceServers()
             .done(createLocalPeer)
             .fail(onError);
@@ -125,7 +129,7 @@ var Application = function (selectors) {
     }
 
     function createChannel(participant, user) {
-        user = typeof User === 'object' ? User.id : user;
+        user = User ? User.id : user;
         var channelId = [user, participant].join('==');
         globalCommunicator.emit('create channel', channelId);
     }
@@ -250,12 +254,34 @@ var Application = function (selectors) {
         $(selectors.videoOn).on('click', videoOn);
         $(selectors.videoOff).on('click', videoOff);
         $('body').on('click', selectors.resolution, changeResolution);
+        $('.collapse-button').on('click', function () {
+           var $frame = $('.participate-frame');
+
+            $frame.toggleClass('tiny');
+            if ($frame.hasClass('tiny')) {
+                $frame.find('.frame-content').hide();
+                $frame.css({ maxWidth: 20 })
+            } else {
+                $frame.css({ maxWidth: 270 });
+                setTimeout(function () {
+                    $frame.find('.frame-content').show();
+                }, 1000);
+            }
+        });
 
         messageWidget.on('send', function(message) {
             globalCommunicator.send({
                 type: 'message',
                 message: message
             });
+        });
+
+        messageWidget.on('file', function (file) {
+            for (var peer in peerConnections) {
+                if (peerConnections.hasOwnProperty(peer)) {
+                    peerConnections[peer].sendFile(file);
+                }
+            }
         });
 
         globalCommunicator.on('connect', onConnect);
@@ -273,6 +299,7 @@ var Application = function (selectors) {
             container: '.chat-container',
             messagesContainer: '.messages',
             message: '#message-text',
+            sendFile: '.send-file',
             showMessageIcon: '.show-chat'
         });
 

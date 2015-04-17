@@ -1,5 +1,9 @@
 var PeerConnection = function(communicator) {
-    var pc, localSignalingChannel, stream;
+    var self = this;
+    var pc,
+        dataChannel,
+        stream,
+        arrayToStoreChunks = [];
     var constraints = {video: true, audio: true},
         mediaConstraints = {
             'mandatory': {
@@ -15,11 +19,11 @@ var PeerConnection = function(communicator) {
             ]
         },
         messageHandlers = {
-            offer: offer.bind(this),
-            candidate: createIceCandidate.bind(this),
-            answer: answer.bind(this),
-            resolutionChanged: resolutionChanged.bind(this),
-            bye: close.bind(this)
+            offer: offer,
+            candidate: createIceCandidate,
+            answer: answer,
+            resolutionChanged: resolutionChanged,
+            bye: close
         };
 
     /*********************************************************************/
@@ -31,7 +35,7 @@ var PeerConnection = function(communicator) {
     }
 
     function onRemoteStreamAdded(event) {
-        this.emit('got remote stream', event);
+        self.emit('got remote stream', event);
     }
 
     function setLocalAndSendMessage(sessionDescription) {
@@ -70,7 +74,7 @@ var PeerConnection = function(communicator) {
     }
 
     function resolutionChanged() {
-        this.emit('resolutionChanged');
+        self.emit('resolutionChanged');
     }
 
     function onMessage(evt) {
@@ -79,10 +83,75 @@ var PeerConnection = function(communicator) {
     }
 
     function dataChannelConnect(event) {
-        localSignalingChannel = event.channel;
-        localSignalingChannel.onmessage = function(event){
-            pc.emit('message', event.data);
-        };
+        dataChannel.onmessage = receiveFile;
+    }
+
+    function onReadAsDataURL(evt, text) {
+        var chunkLength = 512;
+        var data = {};
+
+        if (evt) text = evt.target.result;
+
+        if (text.length > chunkLength) {
+            data.message = text.slice(0, chunkLength);
+            self.emit('progress', (data.message.length / text.length) * 100);
+        } else {
+            data.message = text;
+            data.last = true;
+            self.emit('progress', 100);
+        }
+
+        dataChannel.send(JSON.stringify(data));
+        var remainingDataURL = text.slice(data.message.length);
+        if (remainingDataURL.length) setTimeout(function () {
+            onReadAsDataURL(null, remainingDataURL); // continue transmitting
+        }, 500)
+    }
+
+    function receiveFile(event) {
+        var data = JSON.parse(event.data);
+
+        arrayToStoreChunks.push(data.message);
+        if (data.last) {
+            saveToDisk(arrayToStoreChunks.join(''), 'fake fileName');
+            arrayToStoreChunks = [];
+        }
+    }
+
+    function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        return new Blob(byteArrays, {type: contentType});
+    }
+
+    function saveToDisk(fileUrl, fileName) {
+        var data = fileUrl.split(',');
+        var blob = b64toBlob(data[1], data[0]);
+        var save = document.createElement('a');
+        save.href = window.URL.createObjectURL(blob);
+        save.target = '_blank';
+        save.download = fileName || fileUrl;
+
+        var event = document.createEvent('Event');
+        event.initEvent('click', true, true);
+        save.dispatchEvent(event);
     }
 
     function onNegotiationNeeded() {
@@ -91,17 +160,17 @@ var PeerConnection = function(communicator) {
 
     function initEvents() {
         //communicator events
-        communicator.on('message', onMessage.bind(this));
+        communicator.on('message', onMessage);
         //room events
-        pc.addEventListener('icecandidate', addIceCandidate.bind(this), false);
-        pc.addEventListener("addstream", onRemoteStreamAdded.bind(this), false);
-        pc.addEventListener("datachannel", dataChannelConnect);
+        pc.addEventListener('icecandidate', addIceCandidate, false);
+        pc.addEventListener("addstream", onRemoteStreamAdded, false);
+        dataChannel.addEventListener("open", dataChannelConnect);
     }
 
     function detachEvents() {
-        pc.removeEventListener('icecandidate', addIceCandidate.bind(this), false);
-        pc.removeEventListener("addstream", onRemoteStreamAdded.bind(this), false);
-        pc.removeEventListener("datachannel", dataChannelConnect);
+        pc.removeEventListener('icecandidate', addIceCandidate, false);
+        pc.removeEventListener("addstream", onRemoteStreamAdded, false);
+        dataChannel.removeEventListener("open", dataChannelConnect);
     }
 
     function close() {
@@ -114,8 +183,8 @@ var PeerConnection = function(communicator) {
     /********************************************************************/
     this.init = function(localStream, iceServers) {
         pc = new RTCPeerConnection(iceServers, optional);
-        localSignalingChannel = pc.createDataChannel("sendDataChannel", {reliable: false});
-        initEvents.apply(this);
+        dataChannel = pc.createDataChannel("sendDataChannel", {reliable: false});
+        initEvents();
         stream = localStream;
         pc.addStream(localStream);
         return this;
@@ -130,8 +199,17 @@ var PeerConnection = function(communicator) {
         communicator.send({
             type: 'resolutionChanged'
         });
-        this.offer();
+        self.offer();
         return this;
+    };
+
+    this.sendFile = function (file) {
+        var reader = new FileReader();
+
+        reader.readAsDataURL(file);
+        reader.onload = function(evt) {
+            onReadAsDataURL(evt);
+        };
     };
 
     this.offer = function() {

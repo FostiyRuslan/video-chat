@@ -3,12 +3,18 @@
         <video id="local-stream" class="local-video-stream" width="640" height="480"></video>
     </div>
     <div class="participate-frame well">
-        <button class="btn btn-flat btn-success left join">Join</button>
-        <a class="leave btn btn-flat btn-danger right" href="/logout">Leave</a>
-        <button class="btn participates-amount right" type="button">
-            Participates <span class="badge">0</span>
+        <button type="button" class="btn btn-default left collapse-button">
+            <i class="mdi-image-dehaze"></i>
         </button>
         <div class="clear"></div>
-        <ul class="list-group participates"></ul>
+        <div class="frame-content">
+            <a class="leave btn btn-raised btn-danger right" href="/logout">Leave</a>
+            <button class="btn btn-raised btn-success right join">Join</button>
+            <button class="btn participates-amount right" type="button">
+                Participates <span class="badge">0</span>
+            </button>
+            <div class="clear"></div>
+            <ul class="list-group participates"></ul>
+        </div>
     </div>
 </main>

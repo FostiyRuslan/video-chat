@@ -1,19 +1,27 @@
 var eventEmitter = require('../communication/EventEmitter');
+var passport = require('passport');
 
 var AuthController = function(){
     var db = require('mongoose-simpledb').db;
     var UserModel = require('../models/UserModel')(db);
 
     function authorizationFailed(req, res) {
-        res.redirect('/');
+        res.redirect(401, '/login');
     }
 
     function showLoginPage(req, res) {
         res.render('login.html');
     }
 
-    function login(req, res) {
-        res.json(req.user.toJSON());
+    function login(req, res, next) {
+        passport.authenticate('local', function(err, user, info) {
+            if (err) { return next(err); }
+            if (!user) { return res.status(401).end(); }
+            req.logIn(user, function(err) {
+                if (err) { return next(err); }
+                return res.json(req.user);
+            });
+        })(req, res, next);
     }
 
     function registration(req, res) {

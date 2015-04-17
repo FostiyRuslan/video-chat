@@ -5,6 +5,7 @@ var MessageWidget = function (selectors) {
 
     function attachEvents() {
         $(selectors.message, selectors.container).on('keypress', sendMessage);
+        $(selectors.sendFile, selectors.container).on('change', sendFile);
         $(selectors.showMessageIcon).on('click', function () {
             $('.chat-container').toggle();
             $('.show-chat').removeClass('btn-danger');
@@ -12,6 +13,17 @@ var MessageWidget = function (selectors) {
         });
 
         self.on('message', showMessage);
+        self.on('progress', showFileSendingProgress);
+    }
+
+    function showFileSendingProgress(progress) {
+        $('.progress', selectors.container).show();
+        $('.progress-bar', selectors.container).css({
+            width: (progress | 0) + '%'
+        });
+        if (progress === 100) {
+            $('.progress', selectors.container).hide();
+        }
     }
 
     function sendMessage(e) {
@@ -31,22 +43,31 @@ var MessageWidget = function (selectors) {
         }
     }
 
-    function showMessage(message, isCreator) {
+    function sendFile() {
+        var file = this.files[0];
+
+        this.value = '';
+        self.emit('file', file);
+    }
+
+
+
+    function showMessage(message, isOwn) {
         var $messageContainer = $(selectors.messagesContainer, selectors.container);
         var messageEl = $('<li class="alert message"><div class="date"></div><div class="user"></div><div class="text"></div></li>');
         messageEl.find('.date').text(message.date);
         messageEl.find('.user').text(message.user.name);
         messageEl.find('.text').text(message.text);
-        isCreator ?
+        isOwn ?
             messageEl.addClass('alert-success') :
             messageEl.addClass('alert-danger');
 
-        if ($messageContainer.find('li:last').hasClass('alert-danger')) {
+        if (!isOwn) {
             messageEl.addClass('left');
         } else {
             messageEl.addClass('right');
         }
-        if (!isCreator && !isShown){
+        if (!isOwn && !isShown){
             $(selectors.showMessageIcon).addClass('btn-danger');
         }
         $messageContainer.append(messageEl);
