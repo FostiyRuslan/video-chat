@@ -9,10 +9,13 @@
 <body>
 <%- include('templates/alerts.html') %>
 <%- include('templates/header.html') %>
-<%- include('templates/body.html') %>
+<main id="wrapper" class="row">
+    <%- include('templates/leftBar.html') %>
+    <%- include('templates/body.html') %>
+    <%- include('templates/rightBar.html') %>
+</main>
 <%- include('templates/modals/send-offer-modal.html') %>
 <%- include('templates/modals/message-modal.html') %>
-<%- include('templates/footer.html') %>
 <%- include('templates/scripts.html') %>
 </body>
 </html>

@@ -1,8 +1,6 @@
 @import url(http://fonts.googleapis.com/css?family=Codystar:800,900);
 
 body {
-    min-width: 1000px;
-    min-height: 100%;
     background: #7fbfd6 no-repeat center center fixed;
     background-image: radial-gradient(circle at 50% 50%, #7fbfd6, #5598b0);
     background-image: -webkit-radial-gradient(50% 50%, circle, #7fbfd6, #5598b0);
@@ -20,7 +18,8 @@ main {
     top: 150px;
     background-color: rgba(255, 255, 255, 0.1);
     padding-top: 20px;
-    height: 250px;
+    padding-bottom: 20px;
+    min-height: 250px;
     border: 1px solid #eee9e9;
     box-shadow: 2px 2px 15px #ffffff;
     border-radius: 6px;

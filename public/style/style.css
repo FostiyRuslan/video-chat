@@ -1,5 +1,5 @@
-#wrapper {
-    display: flex;
+body {
+    overflow: hidden;
 }
 .left {
     float: left;
@@ -13,10 +13,27 @@
 .highlight {
     box-shadow: 0 0 20px #ef3019;
 }
+#wrapper {
+    display: flex;
+}
+.left-bar {
+    flex: 0 0 100px;
+    right: 0;
+    top: 0;
+    height: 100vh;
+}
+.left-bar .navbar {
+    height: 100vh;
+}
+.right-bar {
+    flex: 0 0 280px;
+    height: 100vh;
+    width: 280px;
+}
 .video-frame {
     margin-top: -80px;
     display: flex;
-    flex: 1 1 0;
+    flex: 1 1 auto;
     align-items: center;
     flex-wrap: wrap;
     background: #ffffff no-repeat center center fixed;
@@ -27,8 +44,6 @@
     margin: 2px;
 }
 .participate-frame {
-    flex: 0 0 270px;
-    height: 100vh;
     padding-right: 20px;
     background-color: rgba(0, 0, 0, .3);
     transition: max-width  .8s;

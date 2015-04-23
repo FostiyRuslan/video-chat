@@ -260,7 +260,7 @@ var Application = function (selectors) {
             $frame.toggleClass('tiny');
             if ($frame.hasClass('tiny')) {
                 $frame.find('.frame-content').hide();
-                $frame.css({ maxWidth: 20 })
+                $frame.css({ maxWidth: 50 })
             } else {
                 $frame.css({ maxWidth: 270 });
                 setTimeout(function () {
