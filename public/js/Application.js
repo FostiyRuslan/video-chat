@@ -44,6 +44,8 @@ var Application = function (selectors) {
             var video = document.querySelector(selectors.localStream);
             video.src = window.URL.createObjectURL(stream);
             video.muted = true;
+            video.height = $(selectors.streamsContainer).height();
+            video.width = $(selectors.streamsContainer).width();
             video.play();
             updatePeersLocalStream(stream);
             options.onSuccess && options.onSuccess();
@@ -73,7 +75,7 @@ var Application = function (selectors) {
             video.width = 640;
             video.height = 480;
             video.src = window.URL.createObjectURL(event.stream);
-            $(selectors.removeStreamContainer).append(video);
+            $(selectors.streamsContainer).append(video);
             video.play();
         });
         peer.on('resolutionChanged', function () {
