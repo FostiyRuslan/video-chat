@@ -1,13 +1,19 @@
-<aside class="left-bar">
-    <div class="navbar navbar-white control-bar">
+<aside class="well left-bar">
+    <div class="control-bar">
         <a class="btn" href="/"><img src="../static/images/webrtc-logo.png" alt="logo" width="40"></a>
+        <button id="copy-link" data-toggle="tooltip" data-placement="top" title="" data-original-title="Copy room link"
+                class="btn right">
+            <i class="mdi-social-share"></i>
+        </button>
         <button data-toggle="tooltip" data-placement="top" title="" data-original-title="Show Chat"
                 class="btn right show-chat">
             <i class="mdi-communication-message"></i>
         </button>
-        <button data-toggle="modal" data-target="#send-offer" class="btn right show-send-offer">
-            <i class="mdi-communication-email"></i>
-        </button>
+        <% if (user) { %>
+            <button data-toggle="modal" data-target="#send-offer" class="btn right show-send-offer">
+                <i class="mdi-communication-email"></i>
+            </button>
+        <% } %>
         <button style="display: none;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Voice on"
                 id="voice-on" class="btn right">
             <i class="mdi-av-mic"></i>

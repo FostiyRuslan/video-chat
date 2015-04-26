@@ -1,7 +1,9 @@
 var ControlPanelWidget = function () {
     function initZeroClipboard() {
+        new ZeroClipboard( document.getElementById("copy-link") ).on("aftercopy", function( event ) {
+            AlertWidget.show('info', "Copied text to clipboard: " + event.data["text/plain"]);
+        });
         $("#copy-link").attr('data-clipboard-text', location.href);
-        new ZeroClipboard( document.getElementById("copy-link") );
     }
 
     function init() {

@@ -1,4 +1,5 @@
-var MessageWidget = function (selectors) {
+var MessageWidget = function (options) {
+    var selectors = options.selectors;
     var ENTER_KEY_CODE = 13;
     var self = this;
     var isShown = false;
@@ -6,23 +7,22 @@ var MessageWidget = function (selectors) {
     function attachEvents() {
         $(selectors.message, selectors.container).on('keypress', sendMessage);
         $(selectors.sendFile, selectors.container).on('change', sendFile);
+        self.on('message', showMessage);
+        self.on('progress', showFileSendingProgress);
         $(selectors.showMessageIcon).on('click', function () {
             $('.chat-container').toggle();
             $('.show-chat').removeClass('btn-danger');
             isShown = !isShown;
         });
-
-        self.on('message', showMessage);
-        self.on('progress', showFileSendingProgress);
     }
 
     function showFileSendingProgress(progress) {
-        $('.progress', selectors.container).show();
+        $('.progress', selectors.container).css('visibility', 'visible');
         $('.progress-bar', selectors.container).css({
             width: (progress | 0) + '%'
         });
         if (progress === 100) {
-            $('.progress', selectors.container).hide();
+            $('.progress', selectors.container).css('visibility', 'hidden');
         }
     }
 
@@ -33,7 +33,7 @@ var MessageWidget = function (selectors) {
             var text = $el.val();
             var message = {
                 text: text,
-                user: sessionStorage.getItem('user'),
+                user: JSON.parse(sessionStorage.getItem('participant')),
                 date: [date.toDateString(), date.toTimeString().split(' ')[0]].join(' ')
             };
 
@@ -64,13 +64,17 @@ var MessageWidget = function (selectors) {
 
         if (!isOwn) {
             messageEl.addClass('left');
+            notify();
         } else {
             messageEl.addClass('right');
         }
-        if (!isOwn && !isShown){
-            $(selectors.showMessageIcon).addClass('btn-danger');
-        }
         $messageContainer.append(messageEl);
+    }
+
+    function notify() {
+        var sound = document.createElement('audio');
+        sound.src = options.messageSound;
+        sound.play();
     }
 
     function init() {

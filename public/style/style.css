@@ -1,5 +1,12 @@
+html {
+    height: 100%;
+}
 body {
     overflow: hidden;
+    height: 100%;
+}
+.well {
+    margin: 0 !important;
 }
 .left {
     float: left;
@@ -18,8 +25,7 @@ body {
 }
 .left-bar {
     flex: 0 0 100px;
-    right: 0;
-    top: 0;
+    padding: 0 !important;
     height: 100vh;
 }
 .left-bar .navbar {
@@ -34,7 +40,7 @@ body {
     margin-top: -80px;
     display: flex;
     flex: 1 1 auto;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
     background: #ffffff no-repeat center center fixed;
     background-image: radial-gradient(circle at 50% 50%, #cdd1cd, #fff);

@@ -44,8 +44,6 @@ var Application = function (selectors) {
             var video = document.querySelector(selectors.localStream);
             video.src = window.URL.createObjectURL(stream);
             video.muted = true;
-            video.height = $(selectors.streamsContainer).height();
-            video.width = $(selectors.streamsContainer).width();
             video.play();
             updatePeersLocalStream(stream);
             options.onSuccess && options.onSuccess();
@@ -92,6 +90,11 @@ var Application = function (selectors) {
     }
 
     function onConnect() {
+        var loggedInUser = JSON.parse(sessionStorage.getItem('user'));
+        if (loggedInUser) {
+            globalCommunicator.emit('add user', [loggedInUser.firstname, loggedInUser.lastname].join(' '));
+            return;
+        }
         bootbox.prompt("What is your name?", function(name) {
             if (!name) {
                 globalCommunicator.emit('add user', 'Anonymous');
@@ -107,7 +110,7 @@ var Application = function (selectors) {
 
     function added(user) {
         User = user;
-        sessionStorage.setItem('user', User);
+        sessionStorage.setItem('participant', JSON.stringify(User));
         getIceServers()
             .done(createLocalPeer)
             .fail(onError);
@@ -257,7 +260,7 @@ var Application = function (selectors) {
         $(selectors.videoOff).on('click', videoOff);
         $('body').on('click', selectors.resolution, changeResolution);
         $('.collapse-button').on('click', function () {
-           var $frame = $('.participate-frame');
+            var $frame = $('.participate-frame');
 
             $frame.toggleClass('tiny');
             if ($frame.hasClass('tiny')) {
@@ -298,11 +301,14 @@ var Application = function (selectors) {
     function initWidgets() {
 
         messageWidget = new MessageWidget({
-            container: '.chat-container',
-            messagesContainer: '.messages',
-            message: '#message-text',
-            sendFile: '.send-file',
-            showMessageIcon: '.show-chat'
+            selectors: {
+                container: '.chat-container',
+                messagesContainer: '.messages',
+                message: '#message-text',
+                sendFile: '.send-file',
+                showMessageIcon: '.show-chat'
+            },
+            messageSound:'/static/sounds/message.mp3'
         });
 
         sendMailWidget = new SendMailWidget({

@@ -31,7 +31,9 @@ var SendMailWidget = function (selectors) {
         var data = getDataFromForm();
 
         if (data.to && data.subject && data.text) {
-            $.post('/sendOffer', data, onSuccess, onError);
+            $.post('/sendOffer', data)
+                .done(onSuccess)
+                .fail(onError);
         } else {
             AlertWidget.show('error', "Some field is empty!");
             $(selectors.container).modal('show');

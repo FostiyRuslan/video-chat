@@ -11,7 +11,7 @@ var RoomController = function(){
 
     function quickMeeting(req, res) {
         eventEmitter.emit('create room or join', req.params.id);
-        res.render('quick.html');
+        res.render('quick.html', { user: null });
     }
 
     function sendOffer(req, res) {

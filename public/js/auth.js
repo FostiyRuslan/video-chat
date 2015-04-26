@@ -35,7 +35,7 @@
             };
 
             $.post('/login', data).done(function (user) {
-                sessionStorage.setItem('user', user);
+                sessionStorage.setItem('user', JSON.stringify(user));
                 location.replace('/room/' + user.roomId);
             }).fail(function (err) {
                 AlertWidget.show('error', err.statusText);
