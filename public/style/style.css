@@ -40,8 +40,6 @@ header .navbar-nav{
 }
 .video-frame video{
     flex: 1;
-    width: 60%;
-    height: 60%;
     margin: 2px;
 }
 .participate-frame {
