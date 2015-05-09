@@ -1,1 +1,75 @@
-<header></header>
+<header>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <img src="../static/images/webrtc-logo.png" alt="logo" width="40" style="margin-top: -5px;">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <button id="copy-link" data-toggle="tooltip" data-placement="right" title="" data-original-title="Copy room link"
+                                class="btn navbar-btn">
+                            <i class="mdi-social-share"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button data-toggle="tooltip" data-placement="right" title="" data-original-title="Show Chat"
+                                class="btn navbar-btn show-chat">
+                            <i class="mdi-communication-message"></i>
+                        </button>
+                    </li>
+                    <% if (user) { %>
+                        <li>
+                            <button data-toggle="modal" data-target="#send-offer" class="btn navbar-btn show-send-offer">
+                                <i class="mdi-communication-email"></i>
+                            </button>
+                        </li>
+                    <% } %>
+                    <li>
+                        <button style="display: none;" data-toggle="tooltip" data-placement="right" title="" data-original-title="Voice on"
+                                id="voice-on" class="btn navbar-btn">
+                            <i class="mdi-av-mic"></i>
+                        </button>
+                        <button data-toggle="tooltip" data-placement="right" title="" data-original-title="Voice off"
+                                id="voice-off" class="btn navbar-btn">
+                            <i class="mdi-av-mic-off"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button style="display: none;" data-toggle="tooltip" data-placement="right" title="" data-original-title="Video on"
+                                id="video-on" class="btn navbar-btn">
+                            <i class="mdi-av-play-arrow"></i>
+                        </button>
+                        <button data-toggle="tooltip" data-placement="right" title="" data-original-title="Video off"
+                                id="video-off" class="btn navbar-btn">
+                            <i class="mdi-av-pause-circle-fill"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn navbar-btn" data-container="body" data-toggle="popover" data-placement="right">
+                            <i class="mdi-action-open-with"></i>
+                        </button>
+                    </li>
+                </ul>
+                <div class="btn-group-vertical" id="resolutions" style="display: none;">
+                    <button id="size_big" class="btn btn-danger resolution" data-width="600" data-height="410">
+                        <i class="mdi-hardware-laptop" title="640x480"></i>
+                    </button><br>
+                    <button  id="size_middle" class="btn btn-warning resolution" data-width="320" data-height="220">
+                        <i class="mdi-hardware-tablet" title="320x240"></i>
+                    </button><br>
+                    <button id="size_small" class="btn btn-info resolution" data-width="150" data-height="150">
+                        <i class="mdi-hardware-smartphone" title="150x150"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

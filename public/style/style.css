@@ -1,12 +1,5 @@
-html {
-    height: 100%;
-}
 body {
-    overflow: hidden;
     height: 100%;
-}
-.well {
-    margin: 0 !important;
 }
 .left {
     float: left;
@@ -20,33 +13,33 @@ body {
 .highlight {
     box-shadow: 0 0 20px #ef3019;
 }
+.right-bar {
+    width: 380px;
+    min-height: 100%;
+}
+button span {
+    margin-top: -15px;
+}
 #wrapper {
     display: flex;
+    height: 100%;
 }
-.left-bar {
-    flex: 0 0 100px;
-    padding: 0 !important;
-    height: 100vh;
-}
-.left-bar .navbar {
-    height: 100vh;
-}
-.right-bar {
-    flex: 0 0 280px;
-    height: 100vh;
-    width: 280px;
+header .navbar-nav{
+    display: flex;
+    justify-content: center;
+    width: 95%;
 }
 .video-frame {
-    margin-top: -80px;
     display: flex;
-    flex: 1 1 auto;
+    justify-content: center;
     align-items: flex-start;
+    flex-direction: row;
     flex-wrap: wrap;
     background: #ffffff no-repeat center center fixed;
     background-image: radial-gradient(circle at 50% 50%, #cdd1cd, #fff);
 }
 .video-frame video{
-    flex: 1 0 30%;
+    flex: 1;
     margin: 2px;
 }
 .participate-frame {
@@ -55,6 +48,21 @@ body {
     transition: max-width  .8s;
 }
 
+@media screen and (max-width: 800px) {
+    .participates-amount,
+    .frame-content .join,
+    .frame-content .logout {
+        font-size: 8px !important;
+        padding: 0;
+    }
+    .participates {
+        font-size: 9px !important;
+    }
+
+}
+.frame-content .join, .frame-content .logout  {
+    width: 35%;
+}
 .participate-frame .collapse-button {
     transform: rotate(90deg);
     margin-left: -45px;
@@ -154,32 +162,4 @@ body > .alert {
     margin-left: -25%;
     z-index: 100;
     text-align: center;
-}
-.collapse {
-    height: auto;
-    width: auto;
-}
-.collapse.height {
-    position: relative;
-    height: 0;
-    overflow: hidden;
-    -webkit-transition: height 0.35s ease;
-    -moz-transition: height 0.35s ease;
-    -o-transition: height 0.35s ease;
-    transition: height 0.35s ease;
-}
-.collapse.width {
-    position: relative;
-    width: 0;
-    overflow: hidden;
-    -webkit-transition: width 0.35s ease;
-    -moz-transition: width 0.35s ease;
-    -o-transition: width 0.35s ease;
-    transition: width 0.35s ease;
-}
-.collapse.in.width {
-    width: auto;
-}
-.collapse.in.height {
-    height: auto;
 }

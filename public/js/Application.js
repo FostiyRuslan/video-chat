@@ -265,9 +265,9 @@ var Application = function (selectors) {
             $frame.toggleClass('tiny');
             if ($frame.hasClass('tiny')) {
                 $frame.find('.frame-content').hide();
-                $frame.css({ maxWidth: 50 })
+                $frame.css({ maxWidth: 30 })
             } else {
-                $frame.css({ maxWidth: 270 });
+                $frame.css({ maxWidth: 380 });
                 setTimeout(function () {
                     $frame.find('.frame-content').show();
                 }, 1000);
