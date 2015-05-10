@@ -1,5 +1,6 @@
-body {
+html, body {
     height: 100%;
+    overflow: hidden;
 }
 .left {
     float: left;
@@ -29,12 +30,20 @@ header .navbar-nav{
     justify-content: center;
     width: 95%;
 }
+.well {
+    margin: 0 !important;
+}
+.navbar {
+    margin: 0;
+}
 .video-frame {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     flex-direction: row;
     flex-wrap: wrap;
+    flex-flow: wrap row;
+    align-content: flex-end;
     background: #ffffff no-repeat center center fixed;
     background-image: radial-gradient(circle at 50% 50%, #cdd1cd, #fff);
 }
@@ -137,11 +146,6 @@ header .navbar-nav{
     padding-right: 5px;
     color: #4f81e8;
 }
-footer {
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-}
 footer .control-bar {
     padding: 8px !important;
     margin: 0;
@@ -163,3 +167,4 @@ body > .alert {
     z-index: 100;
     text-align: center;
 }
+

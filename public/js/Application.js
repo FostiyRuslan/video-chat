@@ -44,6 +44,8 @@ var Application = function (selectors) {
             var video = document.querySelector(selectors.localStream);
             video.src = window.URL.createObjectURL(stream);
             video.muted = true;
+            video.width = 640;
+            video.height = 480;
             video.play();
             updatePeersLocalStream(stream);
             options.onSuccess && options.onSuccess();
