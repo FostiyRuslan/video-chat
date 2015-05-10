@@ -57,6 +57,7 @@ var Application = function (selectors) {
         getLocalVideoStream({
             onSuccess: function () {
                 globalCommunicator.emit('participants');
+                globalCommunicator.emit('messages');
             }
         });
     }
@@ -254,6 +255,10 @@ var Application = function (selectors) {
         }
     }
 
+    function getMessages(messages) {
+        messageWidget.emit('restore', messages);
+    }
+
     function attachEvents() {
         $(selectors.join).on('click', join);
         $(selectors.voiceOn).on('click', voiceOn);
@@ -294,10 +299,12 @@ var Application = function (selectors) {
         globalCommunicator.on('connect', onConnect);
         globalCommunicator.on('added', added);
         globalCommunicator.on('participants', createPeers);
+        globalCommunicator.on('messages', getMessages);
         globalCommunicator.on('update room', updateList);
         globalCommunicator.on('channel created', addParticipant);
         globalCommunicator.on('new user', createChannel);
         globalCommunicator.on('message', onMessage);
+        globalCommunicator.on('Error', onError);
     }
 
     function initWidgets() {

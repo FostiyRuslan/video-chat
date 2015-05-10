@@ -5,7 +5,7 @@ var sender = require('../EmailSender');
 var RoomController = function(){
 
     function showRoom(req, res) {
-        eventEmitter.emit('create room or join', req.params.room);
+        eventEmitter.emit('create room or join', req.params.room, req.user);
         res.render('room.html', { user: req.user });
     }
 

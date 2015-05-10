@@ -7,13 +7,15 @@ var MessageWidget = function (options) {
     function attachEvents() {
         $(selectors.message, selectors.container).on('keypress', sendMessage);
         $(selectors.sendFile, selectors.container).on('change', sendFile);
-        self.on('message', showMessage);
-        self.on('progress', showFileSendingProgress);
         $(selectors.showMessageIcon).on('click', function () {
             $('.chat-container').toggle();
-            $('.show-chat').removeClass('btn-danger');
+            $(this).removeClass('btn-danger');
             isShown = !isShown;
         });
+
+        self.on('message', showMessage);
+        self.on('progress', showFileSendingProgress);
+        self.on('restore', restoreMessages);
     }
 
     function showFileSendingProgress(progress) {
@@ -38,40 +40,49 @@ var MessageWidget = function (options) {
             };
 
             self.emit('send', message);
-            showMessage(message, true);
+            message.isOwn = true;
+            showMessage(message);
             $el.val('');
         }
     }
 
     function sendFile() {
-        var file = this.files[0];
+        var files = Array.prototype.slice.call(this.files);
 
+        files.forEach(function (file) {
+            self.emit('file', file);
+        });
         this.value = '';
-        self.emit('file', file);
     }
 
-
-
-    function showMessage(message, isOwn) {
+    function showMessage(message) {
         var $messageContainer = $(selectors.messagesContainer, selectors.container);
         var messageEl = $('<li class="alert message"><div class="date"></div><div class="user"></div><div class="text"></div></li>');
         messageEl.find('.date').text(message.date);
         messageEl.find('.user').text(message.user.name);
         messageEl.find('.text').text(message.text);
-        isOwn ?
-            messageEl.addClass('alert-success') :
-            messageEl.addClass('alert-danger');
 
-        if (!isOwn) {
-            messageEl.addClass('left');
+        if (!message.isOwn) {
+            messageEl.addClass('left alert-danger');
             notify();
         } else {
-            messageEl.addClass('right');
+            messageEl.addClass('right alert-success');
         }
         $messageContainer.append(messageEl);
     }
 
+    function restoreMessages(messages) {
+        messages.forEach(function (message) {
+            var date = new Date(message.date);
+            message.date = [date.toDateString(), date.toTimeString().split(' ')[0]].join(' ');
+            showMessage(message);
+        });
+    }
+
     function notify() {
+        if (!isShown) {
+            $(selectors.showMessageIcon).addClass('btn-danger');
+        }
         var sound = document.createElement('audio');
         sound.src = options.messageSound;
         sound.play();

@@ -1,5 +1,6 @@
 var PeerConnection = function(communicator) {
     var self = this;
+    var chunkLength = 512;
     var pc,
         dataChannel,
         stream,
@@ -87,20 +88,26 @@ var PeerConnection = function(communicator) {
     }
 
     function onReadAsDataURL(evt, text) {
-        var chunkLength = 512;
         var data = {};
 
-        if (evt) text = evt.target.result;
+        if (evt) {
+            onReadAsDataURL.size = evt.target.result.length;
+            onReadAsDataURL.step = 1;
+            text = evt.target.result;
+            data.first = true;
+            data.size = onReadAsDataURL.size;
+        }
 
         if (text.length > chunkLength) {
             data.message = text.slice(0, chunkLength);
-            self.emit('progress', (data.message.length / text.length) * 100);
+            self.emit('progress', ((onReadAsDataURL.step * chunkLength) / onReadAsDataURL.size) * 100);
         } else {
             data.message = text;
             data.last = true;
+            data.name = onReadAsDataURL.fileName;
             self.emit('progress', 100);
         }
-
+        onReadAsDataURL.step++;
         dataChannel.send(JSON.stringify(data));
         var remainingDataURL = text.slice(data.message.length);
         if (remainingDataURL.length) setTimeout(function () {
@@ -112,9 +119,16 @@ var PeerConnection = function(communicator) {
         var data = JSON.parse(event.data);
 
         arrayToStoreChunks.push(data.message);
+        if (data.first) {
+            receiveFile.step = 1;
+            receiveFile.size = data.size;
+        }
+        self.emit('progress', ((receiveFile.step * chunkLength) / receiveFile.size) * 100);
+        receiveFile.step++;
         if (data.last) {
-            saveToDisk(arrayToStoreChunks.join(''), 'fake fileName');
+            saveToDisk(arrayToStoreChunks.join(''), data.name);
             arrayToStoreChunks = [];
+            self.emit('progress', 100);
         }
     }
 
@@ -142,8 +156,8 @@ var PeerConnection = function(communicator) {
     }
 
     function saveToDisk(fileUrl, fileName) {
-        var data = fileUrl.split(',');
-        var blob = b64toBlob(data[1], data[0]);
+        var contentType = fileUrl.split(',')[0];
+        var blob = b64toBlob(fileUrl.replace(contentType + ',', ''), contentType);
         var save = document.createElement('a');
         save.href = window.URL.createObjectURL(blob);
         save.target = '_blank';
@@ -175,7 +189,8 @@ var PeerConnection = function(communicator) {
 
     function close() {
         detachEvents();
-        pc.close();
+        //can be already closed
+        try { pc.close(); } catch (e) {}
         communicator.disconnect();
     }
     /*********************************************************************/
@@ -208,6 +223,7 @@ var PeerConnection = function(communicator) {
 
         reader.readAsDataURL(file);
         reader.onload = function(evt) {
+            onReadAsDataURL.fileName = file.name;
             onReadAsDataURL(evt);
         };
     };
