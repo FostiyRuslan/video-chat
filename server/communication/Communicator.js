@@ -1,6 +1,4 @@
 var Communicator = function(io) {
-    var db = require('mongoose-simpledb').db;
-    var MessageModel = require('../models/MessageModel')(db);
     var eventEmitter = require('./EventEmitter');
     var rooms = {};
 
@@ -34,7 +32,7 @@ var Communicator = function(io) {
     }
 
     function getMessages() {
-        MessageModel.getMessages({ roomId: this.room }, (function (error, messages) {
+        eventEmitter.emit('getMessages', { roomId: this.room }, (function (error, messages) {
             if (error) {
                 console.log(error);
             }
@@ -45,7 +43,7 @@ var Communicator = function(io) {
     function onMessage(data) {
         data.sender = this.id;
         if (data.type === "message") {
-            MessageModel.create({
+            eventEmitter.emit('message', {
                 roomId: this.room,
                 user: data.message.user,
                 date: data.message.date,
@@ -70,7 +68,7 @@ var Communicator = function(io) {
 
         if (!rooms[this.room].length) {
             delete rooms[this.room];
-            MessageModel.remove({ roomId: this.room.toString() });
+            eventEmitter.emit('removeMessage', { roomId: this.room.toString() });
         } else {
             this.broadcast.to(this.room).emit('update room', rooms[this.room]);
         }
@@ -117,19 +115,7 @@ var Communicator = function(io) {
         socket.on('message', onMessage);
         socket.on('disconnect', leaveRoom);
 
-        eventEmitter.emit('connected', socket);
-    });
-
-    eventEmitter.on('create room or join', function (room, user) {
-        eventEmitter.removeAllListeners('connected').on('connected', function(socket) {
-            if (user) {
-                if (user.roomId !== room && !rooms[room]) {
-                    socket.emit('Error', { name: 'Host has not joined yet' });
-                    return;
-                }
-            }
-            createRoom.call(socket, room);
-        });
+        eventEmitter.emit('connected', socket, rooms, createRoom);
     });
 };
 

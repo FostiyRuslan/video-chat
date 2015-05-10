@@ -10,7 +10,7 @@ var MessageModel = function(db) {
     };
 
     var remove = function (query, callback) {
-        db.Message.remove(query, callback);
+        db.Message.remove(query, callback).exec();
     };
 
     return {
