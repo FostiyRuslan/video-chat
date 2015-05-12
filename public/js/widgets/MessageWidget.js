@@ -69,6 +69,7 @@ var MessageWidget = function (options) {
             messageEl.addClass('right alert-success');
         }
         $messageContainer.append(messageEl);
+        $messageContainer.scrollTop($messageContainer[0].scrollHeight);
     }
 
     function restoreMessages(messages) {

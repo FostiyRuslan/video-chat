@@ -8,6 +8,7 @@ var Application = function (selectors) {
     var resizeWidget,
         messageWidget,
         sendMailWidget,
+        constraintsWidget,
         controlPanelWidget;
 
     function init() {
@@ -36,30 +37,31 @@ var Application = function (selectors) {
         });
     }
 
-    function getLocalVideoStream(options) {
-        var constraints = options.constraints || {video: true, audio: true};
-        getUserMedia(constraints, function (stream) {
-            localStream = stream;
-            localPeer.addStream(stream);
-            var video = document.querySelector(selectors.localStream);
-            video.src = window.URL.createObjectURL(stream);
-            video.muted = true;
-            video.width = 640;
-            video.height = 480;
-            video.play();
-            updatePeersLocalStream(stream);
-            options.onSuccess && options.onSuccess();
-        }, onError);
+    function getLocalStream(constraints) {
+        try {
+            getUserMedia(constraints, function (stream) {
+                var video = document.querySelector(selectors.localStream);
+                video.src = window.URL.createObjectURL(stream);
+                video.muted = true;
+                video.play();
+                localStream = stream;
+                localPeer.addStream(stream);
+                updatePeersLocalStream(stream);
+                globalCommunicator.emit('participants');
+                globalCommunicator.emit('messages');
+            }, onError);
+        } catch (e) {
+            AlertWidget.show('error', "At least one of audio and video must be requested.");
+            setTimeout(function(){
+                constraintsWidget.showModal();
+            }, 1000);
+        }
+
     }
 
     function createLocalPeer() {
         localPeer = new RTCPeerConnection({ iceServers: [] });
-        getLocalVideoStream({
-            onSuccess: function () {
-                globalCommunicator.emit('participants');
-                globalCommunicator.emit('messages');
-            }
-        });
+        constraintsWidget.showModal();
     }
 
     function onError(error) {
@@ -73,8 +75,6 @@ var Application = function (selectors) {
             var video = document.createElement('video');
 
             video.id = id;
-            video.width = 640;
-            video.height = 480;
             video.src = window.URL.createObjectURL(event.stream);
             $(selectors.streamsContainer).append(video);
             video.play();
@@ -184,6 +184,12 @@ var Application = function (selectors) {
         if (audioTracks[0]) {
             audioTracks[0].enabled = status;
         }
+        if (status && !audioTracks[0]) {
+            getLocalStream({
+                audio: true,
+                video: constraintsWidget.getConstraints().video
+            });
+        }
         $(selectors.voiceOff).toggle();
         $(selectors.voiceOn).toggle();
     }
@@ -193,6 +199,12 @@ var Application = function (selectors) {
 
         if (videoTracks[0]) {
             videoTracks[0].enabled = status;
+        }
+        if (status && !videoTracks[0]) {
+            getLocalStream({
+                audio: constraintsWidget.getConstraints().audio,
+                video: true
+            });
         }
         $(selectors.videoOff).toggle();
         $(selectors.videoOn).toggle();
@@ -242,9 +254,7 @@ var Application = function (selectors) {
             stream.stop();
             localPeer.removeStream(stream);
         });
-        getLocalVideoStream({
-            constraints: constraints
-        });
+        getLocalStream(constraints);
     }
 
     function updatePeersLocalStream(stream) {
@@ -296,6 +306,8 @@ var Application = function (selectors) {
             }
         });
 
+        constraintsWidget.on('constraints', getLocalStream);
+
         globalCommunicator.on('connect', onConnect);
         globalCommunicator.on('added', added);
         globalCommunicator.on('participants', createPeers);
@@ -327,6 +339,15 @@ var Application = function (selectors) {
         });
 
         controlPanelWidget = new ControlPanelWidget();
+
+        constraintsWidget = new ConstraintsWidget({
+            modal: '#constraints',
+            form: '#constraints-form',
+            videoConstraints: '#video-constraints',
+            audioConstraints: '#audio-constraints',
+            sendButton: '.constraints-submit',
+            closeButton: '.constraints-close'
+        });
 
     }
 

@@ -39,17 +39,22 @@ header .navbar-nav{
 .video-frame {
     display: flex;
     justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    flex-wrap: wrap;
+    align-items: flex-start;
     flex-flow: wrap row;
-    align-content: flex-end;
+    height: 99.9%;
+    min-width: 54%;
+    overflow-y: auto;
     background: #ffffff no-repeat center center fixed;
     background-image: radial-gradient(circle at 50% 50%, #cdd1cd, #fff);
 }
 .video-frame video{
     flex: 1;
-    margin: 2px;
+    min-width: 30%;
+    margin: 1px;
+}
+.local-video-stream {
+    width: 80%;
+    float: right;
 }
 .participate-frame {
     padding-right: 20px;
