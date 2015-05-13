@@ -9,9 +9,13 @@ var ConstraintsWidget = function (selectors) {
         audio: false,
         video: {
             mandatory: {
-                chromeMediaSource: 'screen'
+                chromeMediaSource: "desktop",
+                maxWidth: 640,
+                maxHeight: 480
             },
-            optional: []
+            optional: [{
+                googTemporalLayeredScreencast: true
+            }]
         }
     };
 
