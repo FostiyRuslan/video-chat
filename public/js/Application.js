@@ -276,20 +276,6 @@ var Application = function (selectors) {
         $(selectors.videoOn).on('click', videoOn);
         $(selectors.videoOff).on('click', videoOff);
         $('body').on('click', selectors.resolution, changeResolution);
-        $('.collapse-button').on('click', function () {
-            var $frame = $('.participate-frame');
-
-            $frame.toggleClass('tiny');
-            if ($frame.hasClass('tiny')) {
-                $frame.find('.frame-content').hide();
-                $frame.css({ maxWidth: 30 })
-            } else {
-                $frame.css({ maxWidth: 380 });
-                setTimeout(function () {
-                    $frame.find('.frame-content').show();
-                }, 1000);
-            }
-        });
 
         messageWidget.on('send', function(message) {
             globalCommunicator.send({

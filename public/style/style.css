@@ -15,7 +15,7 @@ html, body {
     box-shadow: 0 0 20px #ef3019;
 }
 .right-bar {
-    width: 380px;
+    width: 340px;
     min-height: 100%;
 }
 button span {
@@ -38,6 +38,7 @@ header .navbar-nav{
 }
 .video-frame {
     display: flex;
+    flex: 1;
     justify-content: center;
     align-items: flex-start;
     flex-flow: wrap row;
@@ -71,17 +72,12 @@ header .navbar-nav{
     }
     .participates {
         font-size: 9px !important;
+        padding-right: 0 !important;
     }
 
 }
 .frame-content .join, .frame-content .logout  {
     width: 35%;
-}
-.participate-frame .collapse-button {
-    transform: rotate(90deg);
-    margin-left: -45px;
-    padding-top: 0;
-    padding-bottom: 0;
 }
 .participate-frame button {
     margin-left: 5px;
@@ -94,6 +90,9 @@ header .navbar-nav{
     position: relative;
     height: 300px;
     overflow: auto;
+}
+.participates > li {
+    padding-right: 0 !important;
 }
 .chat-container {
     position: absolute;

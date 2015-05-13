@@ -15,6 +15,9 @@ var ControlPanelWidget = function () {
                 return $('#resolutions').html();
             }
         });
+        $('.collapse-button').on('click', function () {
+            $('.participate-frame').toggle();
+        });
     }
 
     init();
