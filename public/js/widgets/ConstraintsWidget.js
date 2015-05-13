@@ -5,6 +5,15 @@ var ConstraintsWidget = function (selectors) {
         video: true,
         audio: true
     };
+    var screenSharingConstraints = {
+        audio: false,
+        video: {
+            mandatory: {
+                chromeMediaSource: 'screen'
+            },
+            optional: []
+        }
+    };
 
     function init() {
         attachEvents();
@@ -17,6 +26,10 @@ var ConstraintsWidget = function (selectors) {
 
     function getDataFromForm() {
         var form = $(selectors.form, selectors.container);
+
+        if (form.find(selectors.screenConstraints).is(':checked')) {
+            return screenSharingConstraints;
+        }
         constraints = {
             video: form.find(selectors.videoConstraints).is(':checked'),
             audio: form.find(selectors.audioConstraints).is(':checked')
@@ -44,6 +57,10 @@ var ConstraintsWidget = function (selectors) {
 
     this.getConstraints = function () {
         return constraints;
+    };
+
+    this.getScreenSharingConstraints = function () {
+        return screenSharingConstraints;
     };
 
     init();

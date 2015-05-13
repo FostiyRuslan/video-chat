@@ -331,6 +331,7 @@ var Application = function (selectors) {
             form: '#constraints-form',
             videoConstraints: '#video-constraints',
             audioConstraints: '#audio-constraints',
+            screenConstraints: '#screen-constraints',
             sendButton: '.constraints-submit',
             closeButton: '.constraints-close'
         });
