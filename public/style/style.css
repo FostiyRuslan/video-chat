@@ -67,11 +67,10 @@ header .navbar-nav{
     .participates-amount,
     .frame-content .join,
     .frame-content .logout {
-        font-size: 8px !important;
         padding: 0;
     }
     .participates {
-        font-size: 9px !important;
+        font-size: 15px !important;
         padding-right: 0 !important;
     }
 
