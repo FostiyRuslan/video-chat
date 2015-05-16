@@ -78,7 +78,7 @@ header .btn {
 @media screen and (max-width: 800px) {
     .participates-amount,
     .frame-content .join,
-    .frame-content .logout {
+    .frame-content .leave {
         padding: 0;
     }
     .participates {
