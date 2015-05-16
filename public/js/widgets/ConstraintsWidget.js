@@ -10,6 +10,8 @@ var ConstraintsWidget = function (selectors) {
         video: {
             mandatory: {
                 chromeMediaSource: 'screen',
+                maxWidth: 640,
+                maxHeight: 480,
                 minAspectRatio: 1.77
             },
             optional: []
