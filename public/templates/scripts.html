@@ -37,17 +37,22 @@
         }).init();
         $.material.init();
 
-        window.addEventListener('orientationchange', function () {
+        function doOnOrientationChange()
+        {
             switch(window.orientation)
             {
                 case -90:
                 case 90:
-                    alert('landscape');
+                    $('html, body').css('overflow', 'auto');
                     break;
                 default:
-                    alert('portrait');
+                    $('html, body').css('overflow', 'hidden');
                     break;
             }
-        });
+        }
+
+        window.addEventListener('orientationchange', doOnOrientationChange);
+
+        doOnOrientationChange();
     });
 </script>
