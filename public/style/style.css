@@ -1,5 +1,7 @@
 html, body {
     height: 100%;
+    margin: 0;
+    padding: 0;
     overflow: hidden;
 }
 .left {
@@ -26,6 +28,8 @@ video {
 }
 #wrapper {
     display: flex;
+    margin: 0;
+    padding: 0;
     height: 100%;
 }
 header .navbar-nav{
