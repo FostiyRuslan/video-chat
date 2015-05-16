@@ -36,5 +36,18 @@
             resolution: '.resolution'
         }).init();
         $.material.init();
+
+        window.addEventListener('orientationchange', function () {
+            switch(window.orientation)
+            {
+                case -90:
+                case 90:
+                    alert('landscape');
+                    break;
+                default:
+                    alert('portrait');
+                    break;
+            }
+        });
     });
 </script>
