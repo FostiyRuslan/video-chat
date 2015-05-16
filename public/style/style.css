@@ -87,7 +87,7 @@ header .btn {
     }
 
 }
-.frame-content .join, .frame-content .logout  {
+.frame-content .join, .frame-content .leave  {
     width: 35%;
 }
 .participate-frame button {
