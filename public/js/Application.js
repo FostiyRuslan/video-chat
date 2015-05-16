@@ -240,6 +240,18 @@ var Application = function (selectors) {
         }
     }
 
+    function leave() {
+        for (var peer in peerConnections) {
+            if (peerConnections.hasOwnProperty(peer)) {
+                peerConnections[peer].stop();
+                delete peerConnections[peer];
+            }
+        }
+        $(selectors.streamsContainer).empty();
+        globalCommunicator.emit('participants');
+        globalCommunicator.emit('messages');
+    }
+
     function changeResolution() {
         var constraints = {
             audio: true,
@@ -271,6 +283,7 @@ var Application = function (selectors) {
 
     function attachEvents() {
         $(selectors.join).on('click', join);
+        $(selectors.leave).on('click', leave);
         $(selectors.voiceOn).on('click', voiceOn);
         $(selectors.voiceOff).on('click', voiceOff);
         $(selectors.videoOn).on('click', videoOn);

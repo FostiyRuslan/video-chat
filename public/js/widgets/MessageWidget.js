@@ -91,7 +91,9 @@ var MessageWidget = function (options) {
 
     function init() {
         attachEvents();
-        $('.chat-container').draggable();
+        $('.chat-container').draggable({
+            containment: "window"
+        });
     }
 
     init();
