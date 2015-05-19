@@ -281,6 +281,10 @@ var Application = function (selectors) {
         messageWidget.emit('restore', messages);
     }
 
+    function onEmailSearch(query, emails) {
+        sendMailWidget.emit('found', query, emails);
+    }
+
     function attachEvents() {
         $(selectors.join).on('click', join);
         $(selectors.leave).on('click', leave);
@@ -305,6 +309,10 @@ var Application = function (selectors) {
             }
         });
 
+        sendMailWidget.on('search', function (query) {
+            globalCommunicator.emit('search', query);
+        });
+
         constraintsWidget.on('constraints', getLocalStream);
 
         globalCommunicator.on('connect', onConnect);
@@ -315,6 +323,7 @@ var Application = function (selectors) {
         globalCommunicator.on('channel created', addParticipant);
         globalCommunicator.on('new user', createChannel);
         globalCommunicator.on('message', onMessage);
+        globalCommunicator.on('search', onEmailSearch);
         globalCommunicator.on('Error', onError);
     }
 

@@ -32,7 +32,7 @@ video {
     padding: 0;
     height: 100%;
 }
-header .navbar-nav{
+header .navbar-nav {
     display: flex;
     justify-content: center;
     width: 95%;
@@ -185,5 +185,17 @@ body > .alert {
     margin-left: -25%;
     z-index: 100;
     text-align: center;
+}
+#search-result {
+    position: absolute;
+    display: none;
+    width: 100%;
+    border: 2px solid #ccc;
+    background-color: #fff;
+}
+
+#search-result .list-group-item {
+    padding: 10px;
+    font-size: 15px;
 }
 

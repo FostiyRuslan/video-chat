@@ -3,6 +3,7 @@ var events = require('events');
 var EventEmitter = function () {
     var db = require('mongoose-simpledb').db;
     var MessageModel = require('../models/MessageModel')(db);
+    var UserModel = require('../models/UserModel')(db);
     var eventEmitter = new events.EventEmitter();
 
     eventEmitter.on('create room or join', function (room, user) {
@@ -27,6 +28,20 @@ var EventEmitter = function () {
 
     eventEmitter.on('removeMessage', function (room) {
         MessageModel.remove(room);
+    });
+
+    eventEmitter.on('search', function (query) {
+        UserModel.searchEmails({
+            $or: [
+                {"email" : {$regex : ".*" + query + ".*"}},
+                {"firstname" : {$regex : ".*" + query + ".*"}},
+                {"lastname" : {$regex : ".*" + query + ".*"}}
+            ] },
+            { email: 1 }, function (error, emails) {
+                if (error) return;
+                eventEmitter.emit('found', emails);
+            }
+        );
     });
 
     return eventEmitter;

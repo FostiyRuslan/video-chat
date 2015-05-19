@@ -8,6 +8,10 @@ var UserModel = function(db) {
         db.User.find(query, callback);
     };
 
+    var searchEmails = function (query, options, callback) {
+        db.User.find(query, options).exec(callback);
+    };
+
     var save = function (params, callback) {
         var user = new db.User(params);
 
@@ -28,7 +32,8 @@ var UserModel = function(db) {
         getUsers: getUsers,
         save: save,
         update: update,
-        remove: remove
+        remove: remove,
+        searchEmails: searchEmails
     }
 };
 

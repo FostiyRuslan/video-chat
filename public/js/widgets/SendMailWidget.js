@@ -1,5 +1,7 @@
 var SendMailWidget = function (selectors) {
 
+    var self = this;
+
     function init() {
         attachEvents();
         initWidgets();
@@ -12,8 +14,74 @@ var SendMailWidget = function (selectors) {
         });
     }
 
+    function debounce(func, time) {
+        var timer = null;
+
+        return function () {
+            var args = Array.prototype.slice.call(arguments);
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                func.apply(this, args);
+            }, time);
+        }
+    }
+
+    function searchEmails(evt) {
+        var value = $('#to', selectors.container).val();
+
+        if (value.indexOf(',') > -1) {
+            value = value.split(',');
+            value = value[value.length - 1];
+        }
+
+        if (!value || value.length < 2) return;
+
+        self.emit('search', value);
+    }
+
     function attachEvents() {
         $(selectors.sendButton, selectors.container).on('click', sendMail);
+        $('#to', selectors.container).on('input', debounce(searchEmails, 1000));
+        $('input', selectors.container).not('#to').on('focus blur', function () {
+            $('#search-result', selectors.container).hide();
+        });
+        $('#to', selectors.container).on('focus', function () {
+            if ($('#search-result', selectors.container).is(':empty') ||
+                $('#search-result', selectors.container).find('.not-found').length ||
+                !$('#to', selectors.container).val()) return;
+            $('#search-result', selectors.container).show();
+        });
+        $(selectors.container).on('click', '.list-group-item', function (evt) {
+            var value = $(evt.target).text();
+            var query = $(evt.target).data('query');
+            var previousEmails = $('#to', selectors.container).val();
+            $('#search-result', selectors.container).hide();
+
+            if (previousEmails.indexOf(',') > -1) {
+                previousEmails = previousEmails.replace(new RegExp(query + '$'), value + ',');
+            } else {
+                previousEmails = value + ',';
+            }
+            $('#to', selectors.container).val(previousEmails);
+        });
+
+        self.on('found', foundEmails);
+    }
+
+    function foundEmails(query, emails) {
+        $('#search-result', selectors.container).empty().show();
+        if (!emails.length) {
+            $('#search-result', selectors.container).append(
+                $('<a href="#" class="list-group-item not-found"></a>').text('Not found')
+            );
+            return;
+        }
+        emails.forEach(function (item) {
+            $('<a href="#" class="list-group-item"></a>')
+                .text(item.email)
+                .data('query', query)
+                .appendTo($('#search-result', selectors.container));
+        });
     }
 
     function getDataFromForm() {
@@ -50,3 +118,5 @@ var SendMailWidget = function (selectors) {
 
     init();
 };
+
+SendMailWidget.prototype = new EventEmitter();

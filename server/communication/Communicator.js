@@ -53,6 +53,14 @@ var Communicator = function(io) {
         }
     }
 
+    function onSearch(query) {
+        var self = this;
+        eventEmitter.emit('search', query);
+        eventEmitter.once('found', function (result) {
+            self.emit('search', query, result);
+        });
+    }
+
     function leaveRoom() {
         var userIndex = null;
         var user = null;
@@ -113,6 +121,7 @@ var Communicator = function(io) {
         socket.on('messages', getMessages);
         socket.on('create channel', createChannel);
         socket.on('message', onMessage);
+        socket.on('search', onSearch);
         socket.on('disconnect', leaveRoom);
 
         eventEmitter.emit('connected', socket, rooms, createRoom);
