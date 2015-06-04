@@ -15,7 +15,7 @@ main {
 .quick-start {
     position: relative;
     width: 80%;
-    top: 150px;
+    top: 5em;
     background-color: rgba(255, 255, 255, 0.1);
     padding-top: 20px;
     padding-bottom: 20px;
@@ -56,5 +56,20 @@ body > .alert {
     margin-left: -25%;
     z-index: 100;
     text-align: center;
+}
+
+@media screen and (max-width: 800px) {
+    .quick-start h4 {
+        font-size: 15px;
+        line-height: 15px;
+    }
+    .quick-start h1 {
+        font-size: 20px;
+    }
+
+    .quick-start {
+        min-height: 200px;
+    }
+
 }
 

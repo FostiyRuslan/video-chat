@@ -1,8 +1,8 @@
 html, body {
     height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
 }
 .left {
     float: left;
@@ -53,9 +53,8 @@ header .btn {
     flex: 1;
     align-items: flex-start;
     flex-flow: wrap row;
-    height: 99.9%;
+    overflow: hidden;
     min-width: 54%;
-    overflow-y: auto;
     background: #ffffff no-repeat center center fixed;
     background-image: radial-gradient(circle at 50% 50%, #cdd1cd, #fff);
     transition: width 1s;

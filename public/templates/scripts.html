@@ -37,22 +37,12 @@
         }).init();
         $.material.init();
 
-        function doOnOrientationChange()
-        {
-            switch(window.orientation)
-            {
-                case -90:
-                case 90:
-                    $('html, body').css('overflow', 'auto');
-                    break;
-                default:
-                    $('html, body').css('overflow', 'hidden');
-                    break;
-            }
+        function setHeight() {
+            $("body, html").css({
+                height: $("body").get(0).scrollHeight + 'px'
+            });
         }
+        $("body").get(0).onresize = setHeight;
 
-        window.addEventListener('orientationchange', doOnOrientationChange);
-
-        doOnOrientationChange();
     });
 </script>
