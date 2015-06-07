@@ -71,5 +71,11 @@ body > .alert {
         min-height: 200px;
     }
 
+    #create-room {
+        font-size: 10px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
 }
 
