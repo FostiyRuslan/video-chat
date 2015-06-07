@@ -43,7 +43,6 @@ var Application = function (selectors) {
                 var video = document.querySelector(selectors.localStream);
                 video.src = window.URL.createObjectURL(stream);
                 video.muted = true;
-                video.play();
                 localStream = stream;
                 localPeer.addStream(stream);
                 updatePeersLocalStream(stream);
@@ -75,9 +74,9 @@ var Application = function (selectors) {
             var video = document.createElement('video');
 
             video.id = id;
+            video.autoplay = true;
             video.src = window.URL.createObjectURL(event.stream);
             $(selectors.streamsContainer).append(video);
-            video.play();
         });
         peer.on('resolutionChanged', function () {
             $('#' + id).remove();
