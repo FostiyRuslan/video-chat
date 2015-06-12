@@ -59,7 +59,7 @@ var Application = function (selectors) {
     }
 
     function createLocalPeer() {
-        localPeer = new RTCPeerConnection({ iceServers: [] });
+        //localPeer = new RTCPeerConnection({ iceServers: [] });
         constraintsWidget.showModal();
     }
 
