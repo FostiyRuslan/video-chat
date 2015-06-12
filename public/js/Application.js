@@ -74,6 +74,8 @@ var Application = function (selectors) {
             var video = document.createElement('video');
 
             video.id = id;
+            video.width = 640;
+            video.height = 480;
             video.autoplay = true;
             video.src = window.URL.createObjectURL(event.stream);
             $(selectors.streamsContainer).append(video);
