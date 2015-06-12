@@ -11,8 +11,7 @@ var ConstraintsWidget = function (selectors) {
             mandatory: {
                 chromeMediaSource: 'screen',
                 maxWidth: 1280,
-                maxHeight: 720,
-                minAspectRatio: 1.77
+                maxHeight: 720
             },
             optional: []
         }
