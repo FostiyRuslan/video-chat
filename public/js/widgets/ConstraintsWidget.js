@@ -5,17 +5,28 @@ var ConstraintsWidget = function (selectors) {
         video: true,
         audio: true
     };
-    var screenSharingConstraints = {
-        audio: false,
-        video: {
-            mandatory: {
-                chromeMediaSource: 'screen',
-                maxWidth: 1280,
-                maxHeight: 720
-            },
-            optional: []
-        }
-    };
+    var screenSharingConstraints = null;
+    //is Chrome
+    if (navigator.webkitGetUserMedia) {
+        screenSharingConstraints = {
+            audio: false,
+            video: {
+                mandatory: {
+                    chromeMediaSource: 'screen',
+                    maxWidth: 1280,
+                    maxHeight: 720
+                },
+                optional: []
+            }
+        };
+    //firefox
+    } else {
+        screenSharingConstraints = {
+            video: {
+                mediaSource: "screen"
+            }
+        };
+    }
 
     function init() {
         attachEvents();
